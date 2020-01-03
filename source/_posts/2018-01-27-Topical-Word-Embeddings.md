@@ -2,8 +2,7 @@
 title: Topical Word Embeddings
 date: 2018-01-27
 tags:
-- Paper Report
-- nlp
+- NLP
 
 ---
 

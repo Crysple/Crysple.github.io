@@ -2,7 +2,7 @@
 title: Note for IT Project Management
 date: 2018-01-02
 tags:
-- 期末复习
+- Exam Review
 
 ---
 

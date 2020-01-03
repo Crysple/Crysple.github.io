@@ -2,7 +2,7 @@
 title: Notes for Software Achitecture
 date: 2017-12-28
 tags:
-- 期末复习
+- Exam Review
 
 ---
 

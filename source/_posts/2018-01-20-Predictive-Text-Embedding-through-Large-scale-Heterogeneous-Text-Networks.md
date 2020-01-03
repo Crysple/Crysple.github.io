@@ -2,8 +2,7 @@
 title: Predictive Text Embedding through Large-scale Heterogeneous Text Networks
 date: 2018-01-20
 tags:
-- Paper Report
-- nlp
+- NLP
 ---
 
 **Predictive Text Embedding through Large-scale Heterogeneous Text Networks** is an extension of the previous **network embeddings** algorithm – LINE, which utilize both labeled data and unlabeled data to learn a representation for text that has a strong predictive power for tasks like **text classification**

@@ -2,8 +2,8 @@
 title: Hello World
 date: 2018-02-07
 tags:
-- 杂谈
-- life
+- Miscellaneous
+- Life
 
 ---
 

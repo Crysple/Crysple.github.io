@@ -2,7 +2,7 @@
 title: 乘风破浪会有时
 date: 2018-03-19
 tags:
-- life
+-  Life
 ---
 
 ![cover](/img/fuckinglife.jpg)

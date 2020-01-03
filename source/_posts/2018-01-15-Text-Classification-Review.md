@@ -2,7 +2,7 @@
 title: Text Classification Review
 date: 2018-01-15
 tags:
-- nlp
+- NLP
 
 
 ---

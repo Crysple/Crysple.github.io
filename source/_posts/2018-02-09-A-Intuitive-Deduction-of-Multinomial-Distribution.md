@@ -2,8 +2,8 @@
 title: A Intuitive Deduction of Multinomial Distribution
 date: 2018-02-29
 tags:
-- math
-- nlp
+- Math
+- NLP
 mathjax: true
 
 ---
