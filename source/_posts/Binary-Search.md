@@ -60,7 +60,7 @@ def lower_bound(nums, target):
     if nums[mid] >= target:
       r = mid
     else:
-      l = mid
+      l = mid + 1
   return l
 ```
 
