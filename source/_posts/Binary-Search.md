@@ -2,6 +2,7 @@
 title: All You Need to Know About Binary Search
 date: 2020-01-02 19:00:29
 tags: Coding
+categories: Coding
 ---
 
 Binary search is such an easy to write algorithm but there are usually some hidden annoying bugs, such as condition of **while** statement (easy to get an endless loop). Besides, there are some variants like upper_bound and lower_bound searching, which makes this harder. However, if you can hold on to a same criteria of definition, things will become much easier.

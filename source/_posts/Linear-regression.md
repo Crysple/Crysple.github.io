@@ -1,5 +1,5 @@
 ---
-title: Linear_regression
+title: Linear Regression
 date: 2020-01-08 12:49:11
 tags: Machine Learning
 ---
