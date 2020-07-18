@@ -23,6 +23,8 @@ Basically this post introduce simple **BNF** and a easy-to-write **Recursive Des
 
   [385. Mini Parser](https://leetcode.com/problems/mini-parser)
 
+  [394. Decode String](https://leetcode.com/problems/decode-string)
+  
   [439. Ternary Expression Parser](https://leetcode.com/problems/ternary-expression-parser)
 
 <!-- more -->

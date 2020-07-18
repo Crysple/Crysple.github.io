@@ -11,6 +11,203 @@ Leetcode每周碎碎念——参加了一个训练计划，每周输出一个Lee
 
 <!--more-->
 
+## [Minesweeper](https://leetcode.com/problems/minesweeper)
+
+- [Wikipedia](https://en.wikipedia.org/wiki/Minesweeper_(video_game))     
+
+- [online game](http://minesweeperonline.com/)
+
+扫雷，游戏规则想必都很熟悉，这个题目就是模拟下用户点击某个位置后，系统给出的结果。
+
+简单地说下游戏规则
+
+- 点开的格子里
+  - 是数字的，代表这个各自周围的八个格子中有多少个雷
+  - 空格代表没雷
+- 没点开的格子
+  - 可能是雷，数字或空格
+
+玩家点开一个没点开的格子
+
+- 如果是雷，游戏结束
+- 如果那个格子周围有雷，那么格子翻开显示一个数字代表周围有几个雷
+- 如果那个格子是个空格，那么系统自动帮玩家开这个格子周围的所有格，以此递归
+
+这道题本身没有什么意思，就简单地按照规则bfs一下就好了，给出随手写的代码如下
+
+```python
+def updateBoard(self, board: List[List[str]], click: List[int]) -> List[List[str]]:
+    visited = {tuple(click)}
+    n, m = len(board), len(board[0])
+    click = [click]
+    while click:
+        nclick = []
+        for i, j in click:
+            if board[i][j] == 'M':
+                board[i][j] = 'X'
+            elif board[i][j] == 'E':
+                tmp, n_mines = [], 0
+                for di in range(-1, 2):
+                    for dj in range(-1, 2):
+                        if di == dj == 0:
+                            continue
+                        ni, nj = i + di, j + dj
+                        if not (0 <= ni < n and 0 <= nj <m) or (ni, nj) in visited:
+                            continue
+                        tmp.append((ni, nj))
+                        if board[ni][nj] == 'M':
+                            n_mines += 1
+                if not n_mines:
+                    nclick += tmp
+                    visited |= set(tmp)
+                    board[i][j] = 'B'
+                else:
+                    board[i][j] = str(n_mines)
+        click = nclick
+    return board
+```
+
+但我做了这题之后，得益于题目的游戏链接，不可自拔地玩了一周的扫雷。。。
+
+闲起来就点点，还是蛮有意思的，有种比赛打题目的感觉，medium从一开始的一百左右玩到了五十多。
+
+![Screen Shot 2020-07-11 at 2.12.39 PM](https://i.loli.net/2020/07/13/4thRqQGD1OyY3La.png)
+
+
+
+![Screen Shot 2020-07-11 at 11.22.12 AM](https://i.loli.net/2020/07/13/GivAThULFgQyBS8.png)
+
+## [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays)
+
+### 题目描述
+
+题意为给两个sorted array，找出他们的中位数。
+
+比如
+
+- A = [1, 3]， B = [2]，则median = 2
+- A = [1, 2]， B = [3, 4]，则median = (2 + 3) / 2 = 2.5
+
+### 解法
+
+假设两个数组长度分别为n, m，一个Trivial的解法可能是讲两个数组merge起来，然后找中间的那个，复杂度是O(n + m)。当然，题目本意是要个 log (n+m) 级别的算法。其实这个题目并不难，**“排好序”** + **“log级别”**，很明显就是用**二分**来做， 只是没有清晰思路的话很容易被各种**corner case**绕晕。
+
+我从这个题目中**学到的**就是要对每样东西都有 **清晰的定义**， 比如**中位数**， 比如写代码时候的每一个**变量**
+
+> 在统计学上，**中位数** 用于将 一个数字集合 分成**长度相等**的两个子集，且其中一个集合的任意数字 **大于** 另外一个集合的所有数字。
+>
+> - 那么，对于偶数长度的集合，假设分为 left 和 right 两个集合且 left < right，则 median = $\frac{\max(left) + \min(right)}{2}$
+> - 对于奇数长度的，median为将left 和 right分开的最中间的那个元素。
+
+清楚了中位数的定义之后，就知道其实我们只要分别把A, B分成两部分，假设为 leftA, rightA, leftB, rightB，且满足两个条件
+
+1. 左右长度相等：len(leftA) + len(leftB) == len(rightA) + len(rightB) == (len(A) + len(B)) // 2
+2. 左边的任意元素小于右边：已知排好序，所以 leftA < rightA 且 leftB < rightB，所以只要保证 leftA < rightB 且 leftB < rightA 就行了
+
+这里可以看出，假设我们知道A怎么分，比如leftA最后一个元素的index是i，那么根据1就可以算出B是怎么分的（假设leftB最后一个元素index是j），然后就能 O(1) check下是否满足 2。容易知道，我们可以用二分来找到 A 的分法，即index i。
+
+这里引入另外一个可能出bug的地方，就是必须明确**二分的值的定义和可能的值域**。在下面这里，我给出二分值 i 的定义，**i 作为 leftA的最后一个元素下一个index**， 即，leftA index范围为**左闭右开区间 [0, i)**，可供选择的 i 的范围就是 **[0, len(A)]**，其中，最短为 i == 0，leftA为 [0, 0)，即为空；最长为 i == len(A)，leftA为[0, len(A))，即为A的全部。以下讨论下三种情况
+
+- 假设 leftA, leftB, rightA, rightB都不为空，且max(leftA) = l1, max(leftB) = l2, min(rightA) = r1, min(rightB) = r2
+  - 已知排好序（所以l1 < r1 && l2 < r2），所以只需要check l1 < r2 && l2 < r1，如果符合，那就是正确分好四个部分，可以返回median了
+  - 如果 l1 > r2，即 leftA 最大元素有比 rightB大的，那么说明A上分割点 i 还应该左移，让 l1 = max(leftA) 更小一点， 所以缩小二分区间为 [l, mid)
+  - 否则，可知 l2 > r1，那么相反地，i 右移，即[mid+1, r)
+- 若 leftA为空，那就是不用check l1 < r2了，我们**把 l1 置 为 负无穷**，让 l1 < r2 永远满足
+- 若 rightA为空，则无需check l2 < r1，那么**把r1 置为 正无穷**， 让 l2 < r1 永远满足
+- 对leftB, rightB为空的情况同理。
+
+当我们分好两个部分之后，如果长度为奇数个，因为我们在计算一半长度half时候为向下取整，即比如有5个，那么 5 // 2 = 2，即len(leftA) + len(leftB) == 2，所以median是 min(r1, r2）（右边比较小的那个）
+
+若长度为偶数个，那么就是left较大的(max(l1, l2))，和right 较小的 (min(r1, r2))的平均数。
+
+附上python 代码如下
+
+```python
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+        n1, n2 = len(nums1), len(nums2)
+        half = (n1 + n2) // 2 # how many elements in the left including pivot points
+        l, r = 0, n1 + 1
+        # means pick [0, l) from nums1
+        # so if l == 0, [0, 0) means pick none
+        # if l == n1, [0, n1) means pick all
+        while l < r:
+            mid = (l + r) // 2
+            idx = half - mid
+            l1 = nums1[mid-1] if mid != 0 else -float('inf')
+            l2 = nums2[idx-1] if idx > 0 else -float('inf')
+            r1 = nums1[mid] if mid < n1 else float('inf')
+            r2 = nums2[idx] if idx != n2 else float('inf')
+            # print(l, r, mid, '--', l1, l2, r1, r2)
+            if l1 <= r2 and l2 <= r1:
+                if (n1 + n2) & 1:
+                    return min(r1, r2)
+                return (max(l1, l2) + min(r1, r2)) / 2
+            elif l1 > r2:
+                r = mid
+            else:
+                l = mid + 1
+```
+
+
+
+
+
+## [String to Integer (atoi)](https://leetcode.com/problems/string-to-integer-atoi)
+
+一个水题，说是让把一个string转化成一个int，按照题目要求把每种情况都 `if` 下就行了，要求有以下几点
+
+- 数字左右两边可能有空格，后边可能有其它字符比如字母，都需要忽略
+- 数字可能带正负号
+- 如果string的开端不是正负号或者数字，那么它就不能被转化，则应该返回 0
+- 注意你是在一个只能处理`int`的机器上，所以返回的数字需要在区间 [$−2^{31}, 2^{31} − 1$]里面
+
+需要注意的是，最后一点规定了题目只能使用 32位int，所以要有判断是否overflow的逻辑，而不能直接用`long`，贴几个可能的样例输入，以及corner cases:
+
+| Input | "    -42" | "4193 with words" | "words and 987" | "-91283472332" | 2147483649 | +-2  |
+| ----- | --------- | ----------------- | --------------- | -------------- | ---------- | ---- |
+| Ouput | 42        | 4193              | 0               | -2147483648    | 2147483647 | 0    |
+
+下面贴上 `c++` 代码
+
+```C++
+class Solution {
+public:
+    int myAtoi(string str) {
+        int sign = 1;
+        reverse(str.begin(), str.end());
+        while (!str.empty() && str.back() == ' ') str.pop_back();
+        if (str.empty()) return 0;
+        if (str.back() == '-') sign = -1;
+        if (str.back() == '+' || str.back() == '-') str.pop_back();
+        if (str.empty() || str.back() < '0' || str.back() > '9') return 0;
+        int ans = 0;
+        if (sign == 1){
+            while (!str.empty()){
+                if (str.back() < '0' || str.back() > '9') break;
+                if (ans > INT_MAX / 10.0 || (INT_MAX - ans*10) < str.back() - '0') return INT_MAX;
+                ans = ans * 10 - '0' + str.back();
+                str.pop_back();
+            }
+            return ans;
+        }
+        while (!str.empty()){
+            if (str.back() < '0' || str.back() > '9') break;
+            if (ans < INT_MIN / 10.0 || (ans*10 < INT_MIN + 100 && (ans*10 - INT_MIN) < str.back() - '0')) return INT_MIN;
+            ans = ans * 10 + '0' - str.back();
+            str.pop_back();
+        }
+        return ans;
+    }
+};
+```
+
+
+
+
+
 ## [Gas Station](https://leetcode.com/problems/gas-station/)
 
 ### 题目描述
