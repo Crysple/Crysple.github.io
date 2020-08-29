@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property='og:image' content="/img/ogimage.jpeg">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/avatar.jpeg">
+  <link rel="mask-icon" href="/img/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideRightIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="In order to have a big picture about text classification, I read some review papers and took some notes as follows This is a simple introduction to the world of text classification">
+<meta name="keywords" content="NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Text Classification Review">
+<meta property="og:url" content="http://yoursite.com/2018/01/15/2018-01-15-Text-Classification-Review/index.html">
+<meta property="og:site_name" content="Danny&#39;s little world">
+<meta property="og:description" content="In order to have a big picture about text classification, I read some review papers and took some notes as follows This is a simple introduction to the world of text classification">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/61pt29mtsv4pk8uscpfrz82z/image_1c3f0do3011m7qfi1lof1pg4rqf9.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/ioc9u4gt7l6qba0wnoqrt9xn/image_1c3f97an6f33b3v1q9e63f6eom.png">
+<meta property="og:updated_time" content="2019-12-21T21:40:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Text Classification Review">
+<meta name="twitter:description" content="In order to have a big picture about text classification, I read some review papers and took some notes as follows This is a simple introduction to the world of text classification">
+<meta name="twitter:image" content="http://static.zybuluo.com/jyyzzj/61pt29mtsv4pk8uscpfrz82z/image_1c3f0do3011m7qfi1lof1pg4rqf9.png">
+
+<link rel="canonical" href="http://yoursite.com/2018/01/15/2018-01-15-Text-Classification-Review/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Text Classification Review | Danny's little world</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Danny's little world</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">异国漂泊，野蛮生长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/15/2018-01-15-Text-Classification-Review/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/avatar.jpeg">
+      <meta itemprop="name" content="Daniel">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Danny's little world">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Text Classification Review
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-01-15 00:00:00" itemprop="dateCreated datePublished" datetime="2018-01-15T00:00:00-05:00">2018-01-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-21 16:40:33" itemprop="dateModified" datetime="2019-12-21T16:40:33-05:00">2019-12-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>In order to have a big picture about text classification, I read some review papers and took some notes as follows</p>
+<p>This is a simple introduction to the world of text classification</p>
+<a id="more"></a>
+<hr>
+<blockquote>
+<p>Text classification is the task of classifying a document under a predefined category</p>
+</blockquote>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h2><h3 id="1-1-Problem"><a href="#1-1-Problem" class="headerlink" title="1.1 Problem"></a>1.1 Problem</h3><ul>
+<li>People access information online while enormous information lacks organization which makes it difficult to manage</li>
+<li>Data for classification is of heterogeneous nature collected from multi-source and have different formats, different preferred vocabularies and different writing style —&gt; automatic TC is essential</li>
+</ul>
+<h3 id="1-2-Application"><a href="#1-2-Application" class="headerlink" title="1.2 Application"></a>1.2 Application</h3><ul>
+<li><p>since the inception of digital documents to manage the enormous amount of data available on the web</p>
+</li>
+<li><p>Information Extraction &amp; Summarization</p>
+</li>
+<li>Text Retrieval</li>
+<li>Question Answering</li>
+</ul>
+<h3 id="1-3-Steps-involved-in-TC"><a href="#1-3-Steps-involved-in-TC" class="headerlink" title="1.3 Steps involved in TC"></a>1.3 Steps involved in TC</h3><ul>
+<li>Document representation methods</li>
+<li>Feature selection methods</li>
+<li>Constructing a Vector Space Model (VSM)</li>
+<li>Data mining methods</li>
+<li>Evaluation technique used to carry out the results<br><img src="http://static.zybuluo.com/jyyzzj/61pt29mtsv4pk8uscpfrz82z/image_1c3f0do3011m7qfi1lof1pg4rqf9.png" alt="image_1c3f0do3011m7qfi1lof1pg4rqf9.png-125.2kB"></li>
+</ul>
+<h3 id="Objective"><a href="#Objective" class="headerlink" title="Objective"></a>Objective</h3><ul>
+<li>Single-label TC — A document is assigned to only one class<ul>
+<li>TWO CLASS — “Binary class” problem</li>
+<li>N CLASS — “Multi-class” problem</li>
+</ul>
+</li>
+<li>Multi-label TC — A document is assigned to more than one class</li>
+</ul>
+<hr>
+<h2 id="2-Process"><a href="#2-Process" class="headerlink" title="2 Process"></a>2 Process</h2><h3 id="2-1-Document-Representation"><a href="#2-1-Document-Representation" class="headerlink" title="2.1 Document Representation"></a>2.1 Document Representation</h3><pre><code>It is the task of representing a given document in a form which is suitable for data mining system
+</code></pre><ul>
+<li><p>Example — in the form of instances with a fixed number of attributes</p>
+<ul>
+<li>Bag-of-Words</li>
+</ul>
+</li>
+<li><p>Actually, many of them are not important for the learning task and their usage can substantially degrade performance</p>
+<ul>
+<li>So, to <strong>reduce the size</strong> of the feature space is imperative</li>
+<li>Approaches:<ul>
+<li>Remove <strong>STOP WORDS</strong> — a list of common words that are useless</li>
+<li>Only keep the stemming word</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-2-Feature-Selection-or-Feature-Transformation"><a href="#2-2-Feature-Selection-or-Feature-Transformation" class="headerlink" title="2.2 Feature Selection or Feature Transformation"></a>2.2 Feature Selection or Feature Transformation</h3><pre><code>Applied to further reduce the dimensionality of the feature set by removing the irrelevant words
+</code></pre><ul>
+<li><p>Advantages</p>
+<ul>
+<li>Smaller Dataset Size</li>
+<li>Considerable shrinking of the search space &amp; lesser computational requirements</li>
+</ul>
+</li>
+<li><p>Goal</p>
+<ul>
+<li>Reduction of the curse of dimensionality to <ul>
+<li>yield improved classification accuracy</li>
+<li>Reduce over fitting</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Methods</p>
+<ul>
+<li>Feature selection — An <strong>evaluation function</strong> that is applied to a <strong>single word</strong> to rank them by the score for feature selecting<ul>
+<li>Document Frequentcy(DF)</li>
+<li>Term Frequency(TF)</li>
+<li>Mutual Informatin(MI)</li>
+<li>Information Gain(IG)</li>
+<li>Odds Ratio(OR)</li>
+<li>CHI-square statistic(CHI)</li>
+<li>Term Strength(TS)</li>
+</ul>
+</li>
+<li>Feature transformation/Feature extraction<ul>
+<li>Compacts the vocabulary based on feature concurrencies</li>
+<li>Example<ul>
+<li>PCA(Principal Component Analysis)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-3-Constructing-a-Vector-Space-Model"><a href="#2-3-Constructing-a-Vector-Space-Model" class="headerlink" title="2.3 Constructing a Vector Space Model"></a>2.3 Constructing a Vector Space Model</h3><pre><code>Every document here is represented by a vector of N dimensionalities and the complete set of vectors for all documents under condideration is called a VSM      
+</code></pre><ul>
+<li>Weighting the terms<ul>
+<li>Methods like TFIDF</li>
+</ul>
+</li>
+<li>Normalize the values of the weights before using the vectors<ul>
+<li>The most necessary and important codition</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-4-Application-of-a-data-mining-algorithm"><a href="#2-4-Application-of-a-data-mining-algorithm" class="headerlink" title="2.4 Application of a data mining algorithm"></a>2.4 Application of a data mining algorithm</h3><ul>
+<li>Bases<ul>
+<li>Statistical Approaches — statistical method</li>
+<li>Machine Learning Method — various supervised&amp;un-supervised techniques of ML<ul>
+<li>DT    (decision trees)</li>
+<li>NB    (Naive-Bayes)</li>
+<li>Rule Induction</li>
+<li>NN    (Neural Networks)</li>
+<li>KNN   (K-nearest neighbors)</li>
+<li>SVM   (Support Vector Machines)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-5-Evaluation-of-a-text-classifier"><a href="#2-5-Evaluation-of-a-text-classifier" class="headerlink" title="2.5 Evaluation of a text classifier"></a>2.5 Evaluation of a text classifier</h3><h4 id="Metric"><a href="#Metric" class="headerlink" title="Metric"></a>Metric</h4><ul>
+<li>Confusion Matrix<ul>
+<li><img src="http://static.zybuluo.com/jyyzzj/ioc9u4gt7l6qba0wnoqrt9xn/image_1c3f97an6f33b3v1q9e63f6eom.png" alt="image_1c3f97an6f33b3v1q9e63f6eom.png-18.2kB"></li>
+</ul>
+</li>
+<li>Predictive accuracy — $\frac{a+d}{a+b+c+d}$</li>
+<li>Recall<ul>
+<li>$\frac{a}{a+c} $</li>
+<li>The proportion of documents in category $C_k$ that are correctly predicted</li>
+</ul>
+</li>
+<li><p>Precision</p>
+<ul>
+<li>$\frac{a}{a+b}$</li>
+<li>The proportion of documents that are predicted as being in category $C_k$ that are actually in that category</li>
+</ul>
+</li>
+<li><p>Characteristics</p>
+<ul>
+<li>Each level of <strong>recall</strong> is <strong>associated</strong> with a level of <strong>precision</strong>   </li>
+<li><strong>Higher</strong> the recall, <strong>lower</strong> the precision, and vice versa</li>
+</ul>
+</li>
+<li><p>BEP(break-even point) — the point at which recall = precision</p>
+<ul>
+<li>BEP does not always exist</li>
+</ul>
+</li>
+</ul>
+<p><em>Therefore, it is common practice to <strong>combine Recall&amp;Precision</strong> into a single measure of performance</em></p>
+<ul>
+<li>F1 Score — harmonic average of R&amp;P<script type="math/tex; mode=display">F1 = \frac{2\times Precision\times Recall}{Precision+Recall}</script><ul>
+<li>For Binary class</li>
+<li>For multi-class<ul>
+<li>Macro-average<ul>
+<li>one confusion matrix per class</li>
+<li>and then performance measures are computed and these measures are averaged</li>
+<li>It measures  weights all the classes, regardless of how many documents belong to it</li>
+</ul>
+</li>
+<li>Micro-average<ul>
+<li>only one contingency table is used for all the classes</li>
+<li>an average of all the classes is computed for each cell and the performance measures are obtained therein</li>
+<li>It measures weights all the documents, thus favoring performance on common classes</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="Main-Method-in-this-Field"><a href="#Main-Method-in-this-Field" class="headerlink" title="Main Method in this Field"></a>Main Method in this Field</h2><h3 id="Unsupervised"><a href="#Unsupervised" class="headerlink" title="Unsupervised"></a>Unsupervised</h3><h4 id="Text-embedding-methods-SG-Paragraph-Vector"><a href="#Text-embedding-methods-SG-Paragraph-Vector" class="headerlink" title="Text embedding methods (SG, Paragraph Vector)"></a>Text embedding methods (SG, Paragraph Vector)</h4><ul>
+<li>Advantages<ul>
+<li><strong>Simple</strong></li>
+<li><strong>Scalable</strong></li>
+<li><strong>Effective</strong></li>
+<li><strong>Easy to tune</strong> and <strong>accommodate unlabeled data</strong></li>
+</ul>
+</li>
+<li><p>Disadvantages</p>
+<ul>
+<li><p>Yield <strong>inferior results</strong> — Compared to sophisticated deep learning architectures like CNN</p>
+<ul>
+<li>Cuz the deep neural networks fully leverage labeled information that is available for a task when learning the representations</li>
+</ul>
+</li>
+<li><p>Reason of the above</p>
+<ul>
+<li>Learn in a <strong>unsupervised way</strong></li>
+<li>Not leverage the <strong>Labeled Information</strong> available for the task</li>
+<li>The Embedding learned are <strong>not</strong> particularly <strong>tuned for any task</strong> (But applicable to many different tasks)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Supervised"><a href="#Supervised" class="headerlink" title="Supervised"></a>Supervised</h3><h4 id="CNN"><a href="#CNN" class="headerlink" title="CNN"></a>CNN</h4><ul>
+<li>Disadvantages<ul>
+<li><strong>Computational</strong></li>
+<li>Need <strong>large amount of available labeled examples</strong></li>
+<li>It requires <strong>exhaustive tuning</strong> of many parameters</li>
+</ul>
+</li>
+</ul>
+<h4 id="Bag-of-words-BOW-amp-Bag-of-n-grams-BONG"><a href="#Bag-of-words-BOW-amp-Bag-of-n-grams-BONG" class="headerlink" title="Bag-of-words(BOW)&amp;Bag-of-n-grams(BONG)"></a>Bag-of-words(BOW)&amp;Bag-of-n-grams(BONG)</h4><ul>
+<li>Adavantages<ul>
+<li><strong>Simple</strong></li>
+<li><strong>Efficient</strong></li>
+<li>Often Surprising <strong>Accurate</strong></li>
+<li>For BONG, it preserve <strong>word order</strong> in short context</li>
+</ul>
+</li>
+<li>Disadvantages<ul>
+<li>Have little sense about the <strong>semantics</strong> of the words (<strong>distance</strong> between the words)</li>
+</ul>
+</li>
+<li>Disadvantages of BOW<ul>
+<li>Lose word order — different sentences—&gt;same representation</li>
+</ul>
+</li>
+<li>Disadvantages of BONG<ul>
+<li>Data sparsity</li>
+<li>High dimensionality</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/01/20/2018-01-20-Predictive-Text-Embedding-through-Large-scale-Heterogeneous-Text-Networks/" rel="prev" title="Predictive Text Embedding through Large-scale Heterogeneous Text Networks">
+      <i class="fa fa-chevron-left"></i> Predictive Text Embedding through Large-scale Heterogeneous Text Networks
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/01/02/2018-01-02-Notes-For-IT-Project-Management/" rel="next" title="Note for IT Project Management">
+      Note for IT Project Management <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Introduction"><span class="nav-number">1.</span> <span class="nav-text">1 Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Problem"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Problem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Application"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Application</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Steps-involved-in-TC"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 Steps involved in TC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Objective"><span class="nav-number">1.4.</span> <span class="nav-text">Objective</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Process"><span class="nav-number">2.</span> <span class="nav-text">2 Process</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Document-Representation"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Document Representation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Feature-Selection-or-Feature-Transformation"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Feature Selection or Feature Transformation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Constructing-a-Vector-Space-Model"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Constructing a Vector Space Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Application-of-a-data-mining-algorithm"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 Application of a data mining algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-Evaluation-of-a-text-classifier"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 Evaluation of a text classifier</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Metric"><span class="nav-number">2.5.1.</span> <span class="nav-text">Metric</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Main-Method-in-this-Field"><span class="nav-number">3.</span> <span class="nav-text">Main Method in this Field</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unsupervised"><span class="nav-number">3.1.</span> <span class="nav-text">Unsupervised</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Text-embedding-methods-SG-Paragraph-Vector"><span class="nav-number">3.1.1.</span> <span class="nav-text">Text embedding methods (SG, Paragraph Vector)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Supervised"><span class="nav-number">3.2.</span> <span class="nav-text">Supervised</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CNN"><span class="nav-number">3.2.1.</span> <span class="nav-text">CNN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bag-of-words-BOW-amp-Bag-of-n-grams-BONG"><span class="nav-number">3.2.2.</span> <span class="nav-text">Bag-of-words(BOW)&amp;Bag-of-n-grams(BONG)</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/img/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Crysple" title="GitHub → https://github.com/Crysple" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:gdzejlin@gmail.com" title="E-Mail → mailto:gdzejlin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-Danny"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/2018/01/15/2018-01-15-Text-Classification-Review/";
+    this.page.identifier = "2018/01/15/2018-01-15-Text-Classification-Review/";
+    this.page.title = "Text Classification Review";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dannyio.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property='og:image' content="/img/ogimage.jpeg">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/avatar.jpeg">
+  <link rel="mask-icon" href="/img/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideRightIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="上文讲到，一般来说人们是怎么对无输入的事件建模，做出预测和评估，本文则泛化到如何给标记数据建模，预测和评估。以下遵循上一篇文章的逻辑结构，先阐述我们在理想状态，即知道模型原分布参数的条件下下如何作出最优预测以及评估，然后扩展到现实情况，即未知参数情况下的分析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Basics of Prediction Theory 2（预测理论基础二）">
+<meta property="og:url" content="http://yoursite.com/2019/12/27/Prediction_Theory_Basis_2/index.html">
+<meta property="og:site_name" content="Danny&#39;s little world">
+<meta property="og:description" content="上文讲到，一般来说人们是怎么对无输入的事件建模，做出预测和评估，本文则泛化到如何给标记数据建模，预测和评估。以下遵循上一篇文章的逻辑结构，先阐述我们在理想状态，即知道模型原分布参数的条件下下如何作出最优预测以及评估，然后扩展到现实情况，即未知参数情况下的分析。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-01-05T21:24:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Basics of Prediction Theory 2（预测理论基础二）">
+<meta name="twitter:description" content="上文讲到，一般来说人们是怎么对无输入的事件建模，做出预测和评估，本文则泛化到如何给标记数据建模，预测和评估。以下遵循上一篇文章的逻辑结构，先阐述我们在理想状态，即知道模型原分布参数的条件下下如何作出最优预测以及评估，然后扩展到现实情况，即未知参数情况下的分析。">
+
+<link rel="canonical" href="http://yoursite.com/2019/12/27/Prediction_Theory_Basis_2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Basics of Prediction Theory 2（预测理论基础二） | Danny's little world</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Danny's little world</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">异国漂泊，野蛮生长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/27/Prediction_Theory_Basis_2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/avatar.jpeg">
+      <meta itemprop="name" content="Daniel">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Danny's little world">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Basics of Prediction Theory 2（预测理论基础二）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-27 13:12:19" itemprop="dateCreated datePublished" datetime="2019-12-27T13:12:19-05:00">2019-12-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-01-05 16:24:08" itemprop="dateModified" datetime="2020-01-05T16:24:08-05:00">2020-01-05</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>上文讲到，一般来说人们是怎么对无输入的事件建模，做出预测和评估，本文则泛化到如何给标记数据建模，预测和评估。以下遵循上一篇文章的逻辑结构，先阐述我们在理想状态，即知道模型原分布参数的条件下下如何作出最优预测以及评估，然后扩展到现实情况，即未知参数情况下的分析。</p>
+<a id="more"></a>
+<h2 id="统计模型之理想状态"><a href="#统计模型之理想状态" class="headerlink" title="统计模型之理想状态"></a>统计模型之理想状态</h2><p>垃圾邮件分类就是一个具备标记数据的预测问题例子，给定一个邮件x，我们做出判断这是（y=1）或者不是（y=0）一个垃圾邮件。那能否正式地阐述下问题呢？一般来说，如果我们能够清晰地定义一个问题，那么这个问题的99%就已经被解决了。以下我们逐步解释一些概念和定义。</p>
+<ul>
+<li>首先是标记数据$(x, y) \in \mathcal{X}\times\{0, 1\}$<ul>
+<li>其中，$\mathcal{X}$ 是输入（特征）空间，{0, 1}是输出（标记）空间</li>
+<li>注意x并不一定得是<strong>输入空间本身</strong>（比如所有邮件组成的空间），而可以是我们对输入的<strong>一些衡量的空间</strong>，即我们提取出来的特征。</li>
+</ul>
+</li>
+<li>我们只能看到x，然后就必须做出对y的预测。</li>
+<li>如果我们将其建模称一个统计模型，那么(X, Y)就是随机的，同时<ul>
+<li>X 具有一些边缘概率分布。</li>
+<li>给定一个$X=x$，$y$的条件概率分布为头概率是$\eta(x)$的伯努利分布。</li>
+<li>这里的$\eta: \mathcal{X} \rightarrow [0, 1]$就是一个函数，有时被人们称为<strong>回归函数</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="贝叶斯分类器"><a href="#贝叶斯分类器" class="headerlink" title="贝叶斯分类器"></a>贝叶斯分类器</h3><h4 id="最优分类器"><a href="#最优分类器" class="headerlink" title="最优分类器"></a>最优分类器</h4><p>贝叶斯分类器简单来说就是一个函数，输入x，输出预测的标记y，</p>
+<script type="math/tex; mode=display">
+f^*(x) = \unicode{x1D7D9}_{\{\eta(x)>1/2\}}</script><p>这里，星号*代表这是最优的分类器，$\eta(x)$就是<strong>回归方程</strong>。一般来说，这个分类器可以将预测出错的概率最小化，但这其实取决于回归函数$\eta$，矛盾的是，通常我们并不知道它。</p>
+<h4 id="最优错误率"><a href="#最优错误率" class="headerlink" title="最优错误率"></a>最优错误率</h4><p>我们知道，当预测标记和实际标记不一致的时候，预测出错，容易知道，错误率其实就等于这个事件的概率，下面我们推导这个概率的具体值是啥：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}Pr(f^*(X)\ne Y) &= E[\unicode{x1D7D9}_{\{f*(X)\ne Y\}}] \\&= E_X[E_{Y}[\unicode{x1D7D9}_{\{f*(X)\ne Y\}}]] \\&= E_X[\min \{\eta(X), 1-\eta(X)\}]\end{aligned}</script><p>注意到这里的最优错误率与上一篇文章的<strong>区别</strong>是，上一篇文章中，所有输出 $Y$ 都是独立同分布的，而这里讨论的是给定某个 $X=x$，$Y$ 的条件分布，所以最后要对 $X$ 进行积分操作。</p>
+<blockquote>
+<h3 id="条件期望-（Conditional-Expectation）"><a href="#条件期望-（Conditional-Expectation）" class="headerlink" title="条件期望 （Conditional Expectation）"></a>条件期望 （Conditional Expectation）</h3><ul>
+<li>考虑任意随机变量A和B，</li>
+<li>给定B，我们将A的条件期望写作E[A|B]，注意到因为这个数依赖于B，所以它本身也是一个<strong>随机变量</strong>！</li>
+<li>计算它的期望为：$E_B[E_A[A|B]] = E[A]$</li>
+</ul>
+</blockquote>
+<h2 id="统计模型之现实情况"><a href="#统计模型之现实情况" class="headerlink" title="统计模型之现实情况"></a>统计模型之现实情况</h2><p>同上一篇文章一样，现实情况下我们无从得知回归函数 $\eta$，能看到的只是一些原分布产生的数据，通常来讲我们会分成两部分：</p>
+<ul>
+<li>训练数据: $(X_1, Y_1), \ldots, (X_n, Y_n)$</li>
+<li>测试数据: $(X’_1, Y’_1), \ldots, (X’_m, Y’_m)$</li>
+</ul>
+<p>注意到它们都是iid的随机变量，与上篇文章不同的是，测试数据不止一个而是有m个，这是为了测出它的真正的错误率，区分于之前 Y 只是服从一个分布。</p>
+<p>我们的任务就是使用训练数据训练出一个回归方程 $\hat \eta$， 然后参考前文给出分类器</p>
+<script type="math/tex; mode=display">
+\hat f(X) = \unicode{x1D7D9}_{\{\hat \eta(x)>1/2\}}</script><h3 id="测试错误率"><a href="#测试错误率" class="headerlink" title="测试错误率"></a>测试错误率</h3><p>如何计算错误率呢？因为训练数据和测试样例都是iid的，并且我们的分类器$\hat f$只依赖于训练数据，所以它和测试数据是互相独立的。也就是说，给定 $((X_i, Y_i))_{i=1}^n$和 $ \hat f$，我们可以给出条件分布：</p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^m \unicode{x1D7D9}_{\{\hat f(X'_i)\ne Y'_i\}}</script><p>容易看出，这是一个有m个试验，且头概率为 $\hat f$的错误率（假定为 $\epsilon$）的二项分布 (Binomial Distribution)，记作 E ~ Binom(m, $\epsilon$）。</p>
+<h3 id="其它评估方式"><a href="#其它评估方式" class="headerlink" title="其它评估方式"></a>其它评估方式</h3><p>随着人们想预测的事件逐渐变多，测试错误率这单一数值已远远不能满足人们对一个分类器评价指标需求。比方说，对于预测病人是否得某种病的时候，误诊率就显得尤为重要了。因此，衍生出了一系列新的概念和指标去衡量一个上述的分类器，比方说混淆矩阵，P-R曲线，ROC等等，这部分在此不再扩展，可参考<a href="https://crysple.github.io/2018/03/12/2018-03-12-模型的评估和选择/#查准率Precision、查全率Recall" target="_blank" rel="noopener">这里</a>。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/02/Binary-Search/" rel="prev" title="All You Need to Know About Binary Search">
+      <i class="fa fa-chevron-left"></i> All You Need to Know About Binary Search
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/12/25/Prediction_Theory_Basis_1/" rel="next" title="Basics of Prediction Theory 1（预测理论基础一）">
+      Basics of Prediction Theory 1（预测理论基础一） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#统计模型之理想状态"><span class="nav-number">1.</span> <span class="nav-text">统计模型之理想状态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#贝叶斯分类器"><span class="nav-number">1.1.</span> <span class="nav-text">贝叶斯分类器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最优分类器"><span class="nav-number">1.1.1.</span> <span class="nav-text">最优分类器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最优错误率"><span class="nav-number">1.1.2.</span> <span class="nav-text">最优错误率</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#条件期望-（Conditional-Expectation）"><span class="nav-number">1.2.</span> <span class="nav-text">条件期望 （Conditional Expectation）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#统计模型之现实情况"><span class="nav-number">2.</span> <span class="nav-text">统计模型之现实情况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试错误率"><span class="nav-number">2.1.</span> <span class="nav-text">测试错误率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其它评估方式"><span class="nav-number">2.2.</span> <span class="nav-text">其它评估方式</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/img/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Crysple" title="GitHub → https://github.com/Crysple" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:gdzejlin@gmail.com" title="E-Mail → mailto:gdzejlin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-Danny"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/2019/12/27/Prediction_Theory_Basis_2/";
+    this.page.identifier = "2019/12/27/Prediction_Theory_Basis_2/";
+    this.page.title = "Basics of Prediction Theory 2（预测理论基础二）";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dannyio.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

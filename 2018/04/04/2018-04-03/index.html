@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property='og:image' content="/img/ogimage.jpeg">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/avatar.jpeg">
+  <link rel="mask-icon" href="/img/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideRightIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="以下主要介绍在Mac OSX上用cmake编译opencv和如何在Xcode上用C++使用opencv 当然，这已经有较多博客记录，但由于年代原因这些博客残缺不全，或这或那的问题，导致花费了我几乎快一天的时间在配置环境 所以，以下除了主要内容，仍记录下我遇到的一些坑以及原因和解决方法">
+<meta name="keywords" content="Tutorial">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mac上opencv的安装和Xcode c++的配置">
+<meta property="og:url" content="http://yoursite.com/2018/04/04/2018-04-03/index.html">
+<meta property="og:site_name" content="Danny&#39;s little world">
+<meta property="og:description" content="以下主要介绍在Mac OSX上用cmake编译opencv和如何在Xcode上用C++使用opencv 当然，这已经有较多博客记录，但由于年代原因这些博客残缺不全，或这或那的问题，导致花费了我几乎快一天的时间在配置环境 所以，以下除了主要内容，仍记录下我遇到的一些坑以及原因和解决方法">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/l5w93p8ckp3ym3waqgy93kl0/image_1ca5q65ad19591vbm183di7vgtk9.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/pqzt8yhued77gipraeo94inf/Screen%20Shot%202018-04-03%20at%209.39.37%20PM.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/imwvm4lenf8ftmc54k1ae2mn/image_1ca5q7vlbbmi1fg5lrl1hkc1tl413.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/nj6myyp8wlrvx2xa2u8bpk1f/image_1ca5q8oo1lp21p2t1r2r1tiq1vgv1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/vwrb663ldwxtp7pewck2zkgr/111.jpg">
+<meta property="og:updated_time" content="2019-12-21T21:41:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mac上opencv的安装和Xcode c++的配置">
+<meta name="twitter:description" content="以下主要介绍在Mac OSX上用cmake编译opencv和如何在Xcode上用C++使用opencv 当然，这已经有较多博客记录，但由于年代原因这些博客残缺不全，或这或那的问题，导致花费了我几乎快一天的时间在配置环境 所以，以下除了主要内容，仍记录下我遇到的一些坑以及原因和解决方法">
+<meta name="twitter:image" content="http://static.zybuluo.com/jyyzzj/l5w93p8ckp3ym3waqgy93kl0/image_1ca5q65ad19591vbm183di7vgtk9.png">
+
+<link rel="canonical" href="http://yoursite.com/2018/04/04/2018-04-03/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Mac上opencv的安装和Xcode c++的配置 | Danny's little world</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Danny's little world</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">异国漂泊，野蛮生长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/04/2018-04-03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/avatar.jpeg">
+      <meta itemprop="name" content="Daniel">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Danny's little world">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mac上opencv的安装和Xcode c++的配置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-04-04 00:00:00" itemprop="dateCreated datePublished" datetime="2018-04-04T00:00:00-04:00">2018-04-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-21 16:41:18" itemprop="dateModified" datetime="2019-12-21T16:41:18-05:00">2019-12-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>以下主要介绍<strong>在Mac OSX上用cmake编译opencv和如何在Xcode上用C++使用opencv</strong></p>
+<p>当然，这已经有较多博客记录，但由于年代原因这些博客残缺不全，或这或那的问题，导致花费了我几乎快一天的时间在配置环境</p>
+<p>所以，以下除了主要内容，仍记录下我遇到的<strong>一些坑以及原因和解决方法</strong></p>
+<a id="more"></a>
+<hr>
+<h2 id="1-安装homebrew"><a href="#1-安装homebrew" class="headerlink" title="1. 安装homebrew"></a>1. 安装homebrew</h2><p>homebrew之于Mac正如apt之于Linux，都是一个安装包集成工具，方便我们直接用命令安装软件</p>
+<h3 id="安装方法"><a href="#安装方法" class="headerlink" title="安装方法"></a>安装方法</h3><ul>
+<li>直接到homebrew官网复制以下命令到终端运行<br><code>/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code></li>
+</ul>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>基本命令为<br><code>brew install + 软件名</code><br>比如<br><code>brew install opencv</code></p>
+<h2 id="2-安装CMake"><a href="#2-安装CMake" class="headerlink" title="2. 安装CMake"></a>2. 安装CMake</h2><p>CMake是一个跨平台的安装（编译）工具，可以用简单的语句来描述所有平台的安装(编译过程)。他能够输出各种各样的makefile或者project文件,方便我们之后用make安装opencv。CMake类似UNIX下的automake。</p>
+<h3 id="安装方法-1"><a href="#安装方法-1" class="headerlink" title="安装方法"></a>安装方法</h3><p>直接用homebrew安装</p>
+<p><code>brew install cmake</code></p>
+<h2 id="3-openCV"><a href="#3-openCV" class="headerlink" title="3. openCV"></a>3. openCV</h2><h3 id="下载openCV"><a href="#下载openCV" class="headerlink" title="下载openCV"></a>下载openCV</h3><h4 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h4><p>直接用homebrew下载，以opencv3为例，命令为<br><code>brew install opencv3</code></p>
+<h4 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h4><p>到opencv官网下载源码</p>
+<ul>
+<li>官网：<a href="https://opencv.org/" target="_blank" rel="noopener">https://opencv.org/</a></li>
+<li>下载所需版本的openCV的source code</li>
+</ul>
+<h3 id="安装openCV"><a href="#安装openCV" class="headerlink" title="安装openCV"></a>安装openCV</h3><ul>
+<li>在terminal里cd到你下载的opencv的地址<ul>
+<li>homebrew下载的其路径一般在/usr/local/Cellar</li>
+</ul>
+</li>
+<li>新建文件夹，并cd进去<ul>
+<li><code>mkdir release</code></li>
+<li><code>cd release</code></li>
+</ul>
+</li>
+<li>cmake<br>  <code>cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$HOME ..</code>  </li>
+<li>make<br>  <code>make</code></li>
+<li>install<br>  <code>sudo make install</code></li>
+</ul>
+<blockquote>
+<ul>
+<li>问题一：为什么要加CMAKE_INSTALL_PREFIX且指定为用户目录？<ul>
+<li>这个问题困扰了我许久，因为根据以往的经验，我是直接就cmake的了，但是之后的make install一直遇到权限不够的问题，即便我在install加了sudo，后来想想install执行的应该是cmake的代码，在99%下面提示错误如下：</li>
+<li>file cannot create directory: /usr/local/share/OpenCV. Maybe need administrative privileges.</li>
+<li>将cmake的安装目录改成home的话就都可以了</li>
+<li>可恨的是一开始我没注意到这行错误，继续进行xcode的部分一直不成功，所以以为是xcode配置的问题而没想到是opencv安装不成功，因为大部分dylibopencv文件是已经创建成功的了。这是浪费了大部分时间的原因</li>
+</ul>
+</li>
+<li>问题二：为什么要sudo安装？<br>  因为安装openCV时候要搞到系统文件夹，所以要权限</li>
+</ul>
+</blockquote>
+<p>看到安装完就已经快成功了</p>
+<h2 id="Xcode的配置"><a href="#Xcode的配置" class="headerlink" title="Xcode的配置"></a>Xcode的配置</h2><h4 id="1-首先当然是创建一个command-line的c-project"><a href="#1-首先当然是创建一个command-line的c-project" class="headerlink" title="1.首先当然是创建一个command line的c++ project"></a>1.首先当然是创建一个command line的c++ project</h4><h4 id="2-添加lib文件"><a href="#2-添加lib文件" class="headerlink" title="2.添加lib文件"></a>2.添加lib文件</h4><ul>
+<li>右键工程，选择Add file<br>  <img src="http://static.zybuluo.com/jyyzzj/l5w93p8ckp3ym3waqgy93kl0/image_1ca5q65ad19591vbm183di7vgtk9.png" alt="image_1ca5q65ad19591vbm183di7vgtk9.png-114.9kB"></li>
+<li>在文件选择对话框输入”/“，或者按command+shift+g，在弹出的路径框中输入~/lib，就是浏览到你的home目录下，因为你把opencv安装在这了，把里面的全部dylibopecv文件都加进去(其实添加opencv_core,opencv_highgui, opencv_imgproc, opencv_ml四个大概就足够了)<ul>
+<li><img src="http://static.zybuluo.com/jyyzzj/pqzt8yhued77gipraeo94inf/Screen%20Shot%202018-04-03%20at%209.39.37%20PM.png" alt="Screen Shot 2018-04-03 at 9.15.11 PM.png-21.3kB"></li>
+<li><img src="http://static.zybuluo.com/jyyzzj/imwvm4lenf8ftmc54k1ae2mn/image_1ca5q7vlbbmi1fg5lrl1hkc1tl413.png" alt="image_1ca5q7vlbbmi1fg5lrl1hkc1tl413.png-79kB"></li>
+</ul>
+</li>
+<li>嫌乱就新建一个group，把这些文件拖进去<br>  <img src="http://static.zybuluo.com/jyyzzj/nj6myyp8wlrvx2xa2u8bpk1f/image_1ca5q8oo1lp21p2t1r2r1tiq1vgv1g.png" alt="image_1ca5q8oo1lp21p2t1r2r1tiq1vgv1g.png-52kB"></li>
+</ul>
+<h4 id="3-添加lib和header搜索路径"><a href="#3-添加lib和header搜索路径" class="headerlink" title="3.添加lib和header搜索路径"></a>3.添加lib和header搜索路径</h4><ul>
+<li>单击项目工程文件，在Build Setting那里搜索search，找到Header Search Path和Library Search Path</li>
+<li>双击Header Search Path，新增~/include和~/include/opencv两条</li>
+<li><p>双击Library Search Path，添加/usr/local/lib和~/lib两条</p>
+<p>  ￼<img src="http://static.zybuluo.com/jyyzzj/vwrb663ldwxtp7pewck2zkgr/111.jpg" alt="111.jpg-229.5kB"></p>
+</li>
+</ul>
+<h2 id="代码样例"><a href="#代码样例" class="headerlink" title="代码样例"></a>代码样例</h2><p>好了，最后的最后，来一波代码测试下吧</p>
+<p>下面是一个打开图片的代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/core/core.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/highgui/highgui.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/opencv.hpp&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> cv;</span><br><span class="line"><span class="function"><span class="keyword">int</span>  <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//修改图片路径即可</span></span><br><span class="line">    Mat img = imread(<span class="string">"/Users/crysple/Desktop/M1.png"</span>, CV_LOAD_IMAGE_UNCHANGED);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(img.empty())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"failed to load input image\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    imshow(<span class="string">"Display Image"</span>, img);</span><br><span class="line">    waitKey(<span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Tutorial/" rel="tag"># Tutorial</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/04/05/2018-04-05/" rel="prev" title="梦">
+      <i class="fa fa-chevron-left"></i> 梦
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/03/19/2018-03-19-fucking-life/" rel="next" title="乘风破浪会有时">
+      乘风破浪会有时 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-安装homebrew"><span class="nav-number">1.</span> <span class="nav-text">1. 安装homebrew</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装方法"><span class="nav-number">1.1.</span> <span class="nav-text">安装方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用方法"><span class="nav-number">1.2.</span> <span class="nav-text">使用方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-安装CMake"><span class="nav-number">2.</span> <span class="nav-text">2. 安装CMake</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装方法-1"><span class="nav-number">2.1.</span> <span class="nav-text">安装方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-openCV"><span class="nav-number">3.</span> <span class="nav-text">3. openCV</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载openCV"><span class="nav-number">3.1.</span> <span class="nav-text">下载openCV</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方式一"><span class="nav-number">3.1.1.</span> <span class="nav-text">方式一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式二"><span class="nav-number">3.1.2.</span> <span class="nav-text">方式二</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装openCV"><span class="nav-number">3.2.</span> <span class="nav-text">安装openCV</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xcode的配置"><span class="nav-number">4.</span> <span class="nav-text">Xcode的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-首先当然是创建一个command-line的c-project"><span class="nav-number">4.0.1.</span> <span class="nav-text">1.首先当然是创建一个command line的c++ project</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-添加lib文件"><span class="nav-number">4.0.2.</span> <span class="nav-text">2.添加lib文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-添加lib和header搜索路径"><span class="nav-number">4.0.3.</span> <span class="nav-text">3.添加lib和header搜索路径</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码样例"><span class="nav-number">5.</span> <span class="nav-text">代码样例</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/img/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Crysple" title="GitHub → https://github.com/Crysple" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:gdzejlin@gmail.com" title="E-Mail → mailto:gdzejlin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-Danny"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/2018/04/04/2018-04-03/";
+    this.page.identifier = "2018/04/04/2018-04-03/";
+    this.page.title = "Mac上opencv的安装和Xcode c++的配置";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dannyio.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

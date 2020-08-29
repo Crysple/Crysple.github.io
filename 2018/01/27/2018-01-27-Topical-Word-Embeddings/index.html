@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property='og:image' content="/img/ogimage.jpeg">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/avatar.jpeg">
+  <link rel="mask-icon" href="/img/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideRightIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Topical Word Embeddings is an interesting paper from AAAI Conference on Artificial Intelligence, 2015, which employs LDA to assign topics for each word in the text corpus, and learns topical word embe">
+<meta name="keywords" content="NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Topical Word Embeddings">
+<meta property="og:url" content="http://yoursite.com/2018/01/27/2018-01-27-Topical-Word-Embeddings/index.html">
+<meta property="og:site_name" content="Danny&#39;s little world">
+<meta property="og:description" content="Topical Word Embeddings is an interesting paper from AAAI Conference on Artificial Intelligence, 2015, which employs LDA to assign topics for each word in the text corpus, and learns topical word embe">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-12-21T21:40:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Topical Word Embeddings">
+<meta name="twitter:description" content="Topical Word Embeddings is an interesting paper from AAAI Conference on Artificial Intelligence, 2015, which employs LDA to assign topics for each word in the text corpus, and learns topical word embe">
+
+<link rel="canonical" href="http://yoursite.com/2018/01/27/2018-01-27-Topical-Word-Embeddings/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Topical Word Embeddings | Danny's little world</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Danny's little world</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">异国漂泊，野蛮生长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/27/2018-01-27-Topical-Word-Embeddings/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/avatar.jpeg">
+      <meta itemprop="name" content="Daniel">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Danny's little world">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Topical Word Embeddings
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-01-27 00:00:00" itemprop="dateCreated datePublished" datetime="2018-01-27T00:00:00-05:00">2018-01-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-21 16:40:44" itemprop="dateModified" datetime="2019-12-21T16:40:44-05:00">2019-12-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>Topical Word Embeddings</strong> is an interesting paper from AAAI Conference on Artificial Intelligence, 2015, which employs LDA to assign topics for each word in the text corpus, and learns topical word embeddings (TWE) based on both words and their topics</p>
+<p>This artical is a simple review/note I did when learning this paper</p>
+<a id="more"></a>
+<hr>
+<blockquote>
+<ul>
+<li>This artical is just a simple review/note from my report for this paper<br>-For more detailed and straightforward information with images, refer to<br>the report <strong>at the bottom of this page</strong></li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><h3 id="Problem-Motivation"><a href="#Problem-Motivation" class="headerlink" title="Problem / Motivation"></a>Problem / Motivation</h3><ul>
+<li><p>One word &lt;—&gt; One single vector</p>
+<ul>
+<li>indiscriminative for ubiquitous <strong>homonymy</strong> &amp; <strong>polysemy</strong></li>
+<li>It is <strong>problematic</strong> that one word owns a unique vector for tasks like <strong>Text Classification</strong></li>
+<li>Because many words have multiple senses</li>
+<li>To conceive a model that can <strong>discriminate</strong> word senses and generate multi-embeddings for each word</li>
+</ul>
+</li>
+<li><p>Topical word embeddings</p>
+<ul>
+<li>based on words&amp;their topics</li>
+<li>obtain contextual word embeddings</li>
+</ul>
+</li>
+</ul>
+<h3 id="Related-work"><a href="#Related-work" class="headerlink" title="Related work"></a>Related work</h3><h4 id="Multi-prototype-vector-space"><a href="#Multi-prototype-vector-space" class="headerlink" title="Multi-prototype vector space"></a>Multi-prototype vector space</h4><h5 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h5><ul>
+<li>Cluster contexts of word into groups</li>
+<li>Generate a distinct prototype vector for each cluster</li>
+<li><strong>TWO STEPS:</strong><ul>
+<li>Train single prototype word representation first</li>
+<li>Identify multi word embeddings for each polysemous word by <strong>clustering</strong> all its <strong>context window features</strong><ul>
+<li>Computed as the <strong>average</strong> of single prototype <strong>embeddings</strong> of its neighboring words in the context window</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h5><ul>
+<li><strong>Generate</strong> multi-prototype vectors for each word <strong>in isolation</strong><ul>
+<li>Ignore complicated correlations among words &amp; their contexts</li>
+</ul>
+</li>
+<li>Contexts of a word are divided into clusters with <strong>no overlaps</strong><ul>
+<li>A word’s several senses may correlate with each other</li>
+<li>No clear sematic boundary between them</li>
+</ul>
+</li>
+<li>other paper<ul>
+<li>Restriction of scalability when facing exploding training text corpus</li>
+<li>The model is sensitive to the clustering algorithm and require much effort in clustering implementation and parameter tuning</li>
+<li>The universality of the clustering algorithm?</li>
+</ul>
+</li>
+</ul>
+<h4 id="Skip-Gram"><a href="#Skip-Gram" class="headerlink" title="Skip-Gram"></a>Skip-Gram</h4><ul>
+<li>Main idea :<ul>
+<li>A well-known framework for learning <strong>word vectors</strong></li>
+<li>Represent each word as a <strong>low-dimensional, dense vector</strong> via its context words</li>
+<li>If two words co-occur more frequently, then their word vectors are more <strong>similar</strong>, which is estimated by the cosine similarity of their word vectors</li>
+</ul>
+</li>
+</ul>
+<h2 id="Our-Model-—-TWE-Topical-Word-Embeddings"><a href="#Our-Model-—-TWE-Topical-Word-Embeddings" class="headerlink" title="Our Model — TWE (Topical Word Embeddings)"></a>Our Model — TWE (Topical Word Embeddings)</h2><h3 id="Main-Process"><a href="#Main-Process" class="headerlink" title="Main Process"></a>Main Process</h3><ul>
+<li>Employ LDA to assign each word a topic</li>
+<li>Form a word-topic pair &lt;$w_i,z_i$&gt;</li>
+<li>Window size is 1</li>
+</ul>
+<h3 id="Skip-Gram-1"><a href="#Skip-Gram-1" class="headerlink" title="Skip-Gram"></a>Skip-Gram</h3><ul>
+<li>Objective Function:</li>
+</ul>
+<script type="math/tex; mode=display">\mathcal{L}(D) = \frac{1}{M} \sum_{i=1}^{M}\sum_{-k\le c\le k,c\ne 0} \log{Pr(w_{i+c}|w_i)}</script><ul>
+<li>The Probability:</li>
+</ul>
+<script type="math/tex; mode=display">Pr(w_c|w_i) = \frac{e^{w_c\cdot w_i}}{\sum_{w_i\in W}{e^{w_c\cdot w_i}}}</script><h3 id="TWE-1"><a href="#TWE-1" class="headerlink" title="TWE-1"></a>TWE-1</h3><ol>
+<li>Learn word embeddings using Skip-gram</li>
+<li>Initialize each topic vector with the <strong>average</strong> over all words assigned to this topics</li>
+<li>Learn the &lt; topic embeddings&gt; while keeping &lt; word embeddings&gt; <strong>unchanged</strong></li>
+</ol>
+<script type="math/tex; mode=display">\mathcal{L}(D) = \frac{1}{M} \sum_{i=1}^{M}\sum_{-k\le c\le k,c\ne 0} \log{Pr(w_{i+c}|w_i)}+\log{Pr(w_{i+c}|z_i)}</script><script type="math/tex; mode=display">w^z=w\oplus z</script><h3 id="TWE-2"><a href="#TWE-2" class="headerlink" title="TWE-2"></a>TWE-2</h3><p>Initialize &lt;$w_i,z_i$&gt; with &lt; word embeddings&gt; from Skip-gram and learn TWE models</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(D) = \frac{1}{M} \sum_{i=1}^{M}\sum_{-k\le c\le k,c\ne 0} \log{Pr(<w_{i+c},z_{i+c}>|<w_i,z_i>)}</script><script type="math/tex; mode=display">Pr(w_c|w_i) = \frac{e^{w_c^{z_c}\cdot w_i^{z_i}}}{\sum_{<w_c,z_c>\in <W,T>}{e^{w_c^{z_c}\cdot w_i^{z_i}}}}</script><h3 id="TWE-3"><a href="#TWE-3" class="headerlink" title="TWE-3"></a>TWE-3</h3><ol>
+<li>Initialize word vectors using Skip-gram</li>
+<li>Initialize topic vectors using those from TWE-1</li>
+<li>Concatenate these two vector to form a new vector to learn TWE models using the objective function in TWE2</li>
+</ol>
+<hr>
+<h3 id="Contextual-Word-Embedding"><a href="#Contextual-Word-Embedding" class="headerlink" title="Contextual Word Embedding"></a>Contextual Word Embedding</h3><ul>
+<li><p>Topical Distribution of a word <strong>w</strong> under a specific context <strong>c</strong> :</p>
+<script type="math/tex; mode=display">Pr(z|w, c)\propto Pr(w|z)Pr(z|c)</script></li>
+<li><p>The contextual word embedding of the word <strong>w</strong> under the context <strong>c</strong> :</p>
+<script type="math/tex; mode=display">\vec w^c = \sum_{z\in T} Pr(z|w,c)\vec w^z</script></li>
+</ul>
+<ul>
+<li>Contextual word embedding will be used for computing contextual word similarity</li>
+<li>TWO methods for computing <strong>word similarity</strong>:<ul>
+<li>AvgSimC method: <script type="math/tex">\sum_{z\in T}\sum_{z'\in T}Pr(z|w_i,c_i)Pr(z'|w_j,c_j)S(\vec w^z, \vec w^{z'})</script></li>
+<li>MaxSimC method:<ul>
+<li>$\vec w^c = \vec w^z, z=arg\max_z Pr(z|w,c)$</li>
+<li>$S(w_i,c_i,w_j,c_j) = \vec w_i^z\cdot \vec w_j^{z’}$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Document-Embedding"><a href="#Document-Embedding" class="headerlink" title="Document Embedding"></a>Document Embedding</h3><script type="math/tex; mode=display">d=\sum_{w\in d}Pr(w|d)\vec w^z</script><hr>
+<p>Dictionary</p>
+<blockquote>
+<ul>
+<li><strong>Homonymy</strong> :<br>the relation between two words that are spelled the same way but differ in meaning or the relation between two words that are pronounced the same way but differ in meaning</li>
+<li><strong>Polysemy</strong> :<br>When a symbol, word, or phrase means many different things, that’s called polysemy. The verb “get” is a good example of polysemy — it can mean “procure,” “become,” or “understand.”</li>
+</ul>
+</blockquote>
+<hr>
+<div class="pdfobject-container" data-target="/pdf/TWE.pdf" data-height="500px"></div>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/02/07/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/01/20/2018-01-20-Predictive-Text-Embedding-through-Large-scale-Heterogeneous-Text-Networks/" rel="next" title="Predictive Text Embedding through Large-scale Heterogeneous Text Networks">
+      Predictive Text Embedding through Large-scale Heterogeneous Text Networks <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Problem-Motivation"><span class="nav-number">1.1.</span> <span class="nav-text">Problem / Motivation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Related-work"><span class="nav-number">1.2.</span> <span class="nav-text">Related work</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Multi-prototype-vector-space"><span class="nav-number">1.2.1.</span> <span class="nav-text">Multi-prototype vector space</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Process"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Process</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Challenges"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Challenges</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Skip-Gram"><span class="nav-number">1.2.2.</span> <span class="nav-text">Skip-Gram</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Our-Model-—-TWE-Topical-Word-Embeddings"><span class="nav-number">2.</span> <span class="nav-text">Our Model — TWE (Topical Word Embeddings)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Main-Process"><span class="nav-number">2.1.</span> <span class="nav-text">Main Process</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Skip-Gram-1"><span class="nav-number">2.2.</span> <span class="nav-text">Skip-Gram</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TWE-1"><span class="nav-number">2.3.</span> <span class="nav-text">TWE-1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TWE-2"><span class="nav-number">2.4.</span> <span class="nav-text">TWE-2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TWE-3"><span class="nav-number">2.5.</span> <span class="nav-text">TWE-3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Contextual-Word-Embedding"><span class="nav-number">2.6.</span> <span class="nav-text">Contextual Word Embedding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Document-Embedding"><span class="nav-number">2.7.</span> <span class="nav-text">Document Embedding</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/img/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Crysple" title="GitHub → https://github.com/Crysple" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:gdzejlin@gmail.com" title="E-Mail → mailto:gdzejlin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-Danny"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/2018/01/27/2018-01-27-Topical-Word-Embeddings/";
+    this.page.identifier = "2018/01/27/2018-01-27-Topical-Word-Embeddings/";
+    this.page.title = "Topical Word Embeddings";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://dannyio.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
