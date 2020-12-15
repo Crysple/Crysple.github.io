@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property='og:image' content="/img/ogimage.jpeg">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/avatar.jpeg">
+  <link rel="mask-icon" href="/img/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideRightIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="延续上一篇关于预测理论和ML的内容，本文旨在从数学角度理解和推导线性回归。 内容主要包括：  回归问题中的统计模型——从有输入到无输入模型 建模和评估风险（风险函数，损失函数等） 作出最优预测   线性回归模型 线性回归是啥 数据拟合参数的方法 最大似然估计 MLE 经验风险最小化 ERM (Empirical Risk Minimization)   ERM 怎么解 ERM 表现评估（overf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linear Regression">
+<meta property="og:url" content="http://yoursite.com/2020/01/08/Linear-regression/index.html">
+<meta property="og:site_name" content="Zejun Lin&#39;s Blog">
+<meta property="og:description" content="延续上一篇关于预测理论和ML的内容，本文旨在从数学角度理解和推导线性回归。 内容主要包括：  回归问题中的统计模型——从有输入到无输入模型 建模和评估风险（风险函数，损失函数等） 作出最优预测   线性回归模型 线性回归是啥 数据拟合参数的方法 最大似然估计 MLE 经验风险最小化 ERM (Empirical Risk Minimization)   ERM 怎么解 ERM 表现评估（overf">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/img/post_img/Regression_function.png">
+<meta property="og:image" content="http://mathworld.wolfram.com/images/eps-gif/GaltonBoard_1000.gif">
+<meta property="og:image" content="http://yoursite.com/img/post_img/Regression_function.png">
+<meta property="og:image" content="http://yoursite.com/img/post_img/ERM.png">
+<meta property="og:image" content="http://yoursite.com/img/post_img/overfitting.png">
+<meta property="article:published_time" content="2020-01-08T17:49:11.000Z">
+<meta property="article:modified_time" content="2020-05-24T22:36:50.595Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Machine Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/img/post_img/Regression_function.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/01/08/Linear-regression/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Linear Regression | Zejun Lin's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zejun Lin's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">异国漂泊，野蛮生长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/08/Linear-regression/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/avatar.jpeg">
+      <meta itemprop="name" content="Daniel">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zejun Lin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linear Regression
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-01-08 12:49:11" itemprop="dateCreated datePublished" datetime="2020-01-08T12:49:11-05:00">2020-01-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-24 18:36:50" itemprop="dateModified" datetime="2020-05-24T18:36:50-04:00">2020-05-24</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="/img/post_img/Regression_function.png" alt="Regression_function_img"><br>延续上一篇关于预测理论和ML的内容，本文旨在从数学角度理解和推导线性回归。</p>
+<p>内容主要包括：</p>
+<ol>
+<li>回归问题中的统计模型——从有输入到无输入模型<ol>
+<li>建模和评估风险（<strong>风险函数</strong>，<strong>损失函数</strong>等）</li>
+<li>作出最优预测</li>
+</ol>
+</li>
+<li>线性回归模型<ol>
+<li>线性回归是啥</li>
+<li>数据拟合参数的方法<ol>
+<li>最大似然估计 MLE</li>
+<li>经验风险最小化 ERM (Empirical Risk Minimization)</li>
+</ol>
+</li>
+<li>ERM 怎么解</li>
+<li>ERM 表现评估（overfitting等内容）</li>
+</ol>
+</li>
+</ol>
+<a id="more"></a>
+<h2 id="一、回归问题中的统计模型"><a href="#一、回归问题中的统计模型" class="headerlink" title="一、回归问题中的统计模型"></a>一、回归问题中的统计模型</h2><h3 id="无输入模型"><a href="#无输入模型" class="headerlink" title="无输入模型"></a>无输入模型</h3><p>为了简化问题，我们同样先来看一个没有输入的回归模型，就像前文的从抛硬币事件，我们只能观察到模型不同的输出结果。不同的是，抛硬币只有两个输出结果，但在回归问题中，我们预测的是<strong>连续的实数值</strong>， 这里有个类似的装置是高尔顿板——一块竖直放置的板，上面有交错排列的钉子。让小球从板的上端自由下落，当其碰到钉子后会随机向左或向右落下，最终，小球会落至板底端的某一格子中。当格子足够多的时候，我们可以看成是连续的。</p>
+<p><img src="http://mathworld.wolfram.com/images/eps-gif/GaltonBoard_1000.gif" alt="GaltonBoard"></p>
+<blockquote>
+<p>— Image from <cite><a target="_blank" rel="noopener" href="http://mathworld.wolfram.com/GaltonBoard.html">Wolfram MathWorld</a></cite></p>
+</blockquote>
+<p>我们要预测的就是球最终会落到哪个格子。</p>
+<p>可以看到，跟抛硬币一样，小球落下的最终位置是随机，所以要先选用一个统计模型来进行建模，这里选用平均值为$\mu$，方差为$\sigma^2$的高斯分布，写作 $N(\mu, \sigma^2 )$。那么我们要怎么衡量预测结果好坏呢？这里引发了两个问题：</p>
+<ol>
+<li>一是在回归问题中，因为结果是连续的，我们基本不可能预测到和真实值一模一样的结果。<ul>
+<li>注意到在前文中，因为预测结果只有对错两种区别，所以我们可以用错误率来衡量预测结果，其实也就是<strong>zero-one loss</strong>；</li>
+</ul>
+</li>
+<li>二是因为输出是随机的，所以我们不能只是单看一次预测。</li>
+</ol>
+<p>对应的解决方法是</p>
+<ol>
+<li>改用预测值和真实值的距离平方来衡量结果，叫作<strong>平方差损失</strong> <strong>Square loss</strong> (对比zero-one loss)。</li>
+<li>计算这个Square loss的期望值，称为 <strong>期望平方差损失</strong> <strong>Expected square loss</strong>。同样的，这个值自然是越小越好。</li>
+</ol>
+<h4 id="最优预测"><a href="#最优预测" class="headerlink" title="最优预测"></a>最优预测</h4><p>整理一下上文信息，可以知道</p>
+<ul>
+<li><p>真实位置 $Y$ 是一个随机变量，且$\mathbb{E}[Y] = \mu，Var[Y] = \mathbb{E}[(Y-\mathbb{E}[Y])^2] = \sigma^2$</p>
+</li>
+<li><p>我们要预测 $\hat y\in R$，且最小化<strong>期望平方差损失</strong> $\mathbb{E}[(\hat y - Y)^2]$</p>
+</li>
+</ul>
+<p>拆解一下得到</p>
+<script type="math/tex; mode=display">
+\begin{aligned}\mathbb{E}[(\hat y - Y)^2] &= \mathbb{E}[((\hat y - \mu) + (\mu -Y))^2]\\&= \mathbb{E}[(\hat y - \mu)^2] + \mathbb{E}[(\hat y - \mu)]\cdot \mathbb{E}[(\mu -Y)] + \mathbb{E}[(\mu -Y)^2]\\&= (\hat y - \mu)^2 + \sigma^2\end{aligned}</script><p>这个过程叫做<strong>Bias-variance decomposition</strong>，直译应该叫<strong>偏置方差分解</strong> ？注意到这里Y是随机变量，$\mu, \hat y$都是实值，所以中间的期望相乘可以拆开，且$\mathbb{E}[(\mu - y)] = 0$</p>
+<p>从最终结果容易看出，为了最小化<strong>期望平方差损失</strong> ，我们作出<strong>最优预测</strong> $\hat y = \mu$</p>
+<h3 id="有输入模型"><a href="#有输入模型" class="headerlink" title="有输入模型"></a>有输入模型</h3><p>这里的线性回归模型和前文为带标签数据建立的模型[TODO: cite]基本是一样的，除了</p>
+<ol>
+<li>预测值变成了<em>实数</em>，而不是{0, 1}或者{0, 1, 2, …, K}</li>
+<li>我们更加关心<em>平方差损失</em>，而非预测的<em>对错</em></li>
+</ol>
+<p>这里引入一个概念叫作 <strong>Risk Function</strong> <strong>风险函数</strong>，风险函数一般和某个<strong>损失函数</strong>搭配使用，用于衡量<strong>期望意义上</strong>某个预测函数的好坏。在这里，对于一个预测函数 $f$，以<strong>平方差损失</strong>为例，它的风险为</p>
+<script type="math/tex; mode=display">
+R(f) = \mathbb{E}_p[(f(\boldsymbol{X})-Y)^2] = \int\int p(\boldsymbol{x}, y)(f(\boldsymbol{X})-Y)^2 d\boldsymbol{x} dy</script><p>其中，p是 $\boldsymbol{x}, y$的原分布。</p>
+<p>其实，<strong>错误率</strong>也是一种<strong>风险函数</strong>，只不过它的<strong>损失函数</strong>是zero-one loss，即 $\unicode{x1D7D9}_{f(x)\ne y}$。</p>
+<h4 id="最优预测-1"><a href="#最优预测-1" class="headerlink" title="最优预测"></a>最优预测</h4><p>从无输入的最优预测，我们可以看出，最优预测总是预测其期望值，因为在有输入的模型中，给定一个输入X，Y的分布就被固定下来，我们预测这个分布的期望值就行了，也就是</p>
+<script type="math/tex; mode=display">
+f^* = \mathbb{E}[Y|\boldsymbol{X}=\boldsymbol{x}]</script><p>同样的，这个函数也就做回归函数，它给出了最小分险的预测，且由给定X情况下，Y的分布决定。</p>
+<p><img src="/img/post_img/Regression_function.png" alt="Regression_function_img"></p>
+<h2 id="二、线性回归模型"><a href="#二、线性回归模型" class="headerlink" title="二、线性回归模型"></a>二、线性回归模型</h2><p>上文讲到，最优预测就是给定 $\boldsymbol{X}$ ，预测 $Y$ 的期望值，但并没有讲到如何利用 $\boldsymbol{X}$ 去预测 $Y$ 的期望值。<strong>线性回归</strong>，故名思义，就是用线性关系去拟合 $\boldsymbol{X}$ 和 $Y$ 期望值之间的关系，这里的$\boldsymbol{X}$ 指的是一个<strong>d</strong>个实数值的列向量，即$\boldsymbol{X}\in \mathbb{R}^d$。那么给定 $\boldsymbol{X}=\boldsymbol{x}$， 有 $\mathbb{E}[Y] = \boldsymbol{x}^Tw$，这里的 <strong>w</strong> 就是人们常说的权重向量。</p>
+<p>那么，我们就讲 $(\boldsymbol{X}, Y)$ 的线性回归模型写作</p>
+<ul>
+<li>$Y|\boldsymbol{X}=\boldsymbol{x} \sim N(\boldsymbol{x}^T w, \sigma^2)$ <ul>
+<li>这里的假设是给定 $\boldsymbol{X}=\boldsymbol{x}, Y$的分布同上文是高斯分布，但也可以是其它以 $\boldsymbol{x}^T w, \sigma^2$ 为参数的分布</li>
+<li>w 是权重向量，$\sigma$ 是分布的另外一个参数，但一般和预测无关</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>如无特殊说明，这里的向量均为<strong>列向量</strong>，比如上文的 <strong>x</strong> 。</p>
+<p>对应地，$\boldsymbol{x}^T$ 是对应的<strong>行向量</strong>（即x的转置），$\boldsymbol{x}^Tw$ 可以理解为矩阵相乘，也可以理解为两个向量的点积。</p>
+<p>即，</p>
+<script type="math/tex; mode=display">
+x = \begin{bmatrix}x_1\\ x_2\\ ... \\ x_d \end{bmatrix}, x^T=\begin{bmatrix}x_1, x_2, ..., x_d \end{bmatrix}\\x^Tw = \begin{bmatrix}x_1, x_2, ..., x_d \end{bmatrix} \cdot \begin{bmatrix}w_1\\ w_2\\ ... \\ w_d \end{bmatrix} = \sum_{i=1}^d x_iw_i</script></blockquote>
+<h3 id="A-增强线性回归——特征变换"><a href="#A-增强线性回归——特征变换" class="headerlink" title="A. 增强线性回归——特征变换"></a>A. 增强线性回归——特征变换</h3><p>一般人们为了让线性回归更加好用，不用直接使用原输入 <strong>x</strong>， 而是会对它做一个<strong>变换</strong>，用函数可以表示为 $\varphi(x)$， 然后再去和权重向量相乘，即$\varphi(x)^T w$。比如</p>
+<ul>
+<li>非线性数值变换：$\varphi(x) = \ln (x+1)$</li>
+<li>三角变换：$\varphi(x) = (1, sin(x), cos(x), sin(2x), cos(2x), …)$</li>
+<li>多项式变换：$\varphi(x) = (1, x_1, x_2, …, x_d, x_1^2, x_2^2, …, x_d^2, x_1x_2, …, x_{d-1}x_d)$</li>
+</ul>
+<p>这其中最重要的就是<strong>仿射变换</strong> <strong>Affine Transformation</strong>，它相当于给线性变换加了个截距项a，写作</p>
+<script type="math/tex; mode=display">
+\varphi(\boldsymbol{x}) = (1, \boldsymbol{x})</script><p>这里的$\boldsymbol{x}$是一个向量，相当于给$\boldsymbol{x}$加多一个维度，值为1，同样将w扩展为 $w = (a, b)$， 那么 $\varphi(\boldsymbol{x})^T w = a+b\boldsymbol{x}$, 一般把a叫做截距项，即 <strong>intercept term</strong>。</p>
+<p>为什么仿射变换特别重要呢？考虑下面这个例子，假设 y 是健康指标， x 是体温。医学研究表明和健康相关的特征是体温与 37 度的距离平方，即 $(x - 37)^2$。这里就出现一个问题了，一开始我们并不知道 37 这个数字，但加上仿射变换之后，就可以让模型自己去学习啦！</p>
+<h3 id="B-拟合数据的方法"><a href="#B-拟合数据的方法" class="headerlink" title="B. 拟合数据的方法"></a>B. 拟合数据的方法</h3><p>当然了，和抛硬币问题一样，现实中我们并不知道原模型分布的参数，以上文的例子来说，就是不知道 $\mu, \sigma$。所以我们需要用可观察的数据，即很多的 $(\boldsymbol{X}, Y)$ 数据点去拟合权重向量 w。</p>
+<h4 id="最大似然估计-Maximum-Likelihood-Estimation-MLE"><a href="#最大似然估计-Maximum-Likelihood-Estimation-MLE" class="headerlink" title="最大似然估计 Maximum Likelihood Estimation (MLE)"></a>最大似然估计 Maximum Likelihood Estimation (MLE)</h4><p>在上一节里面，我们用 $w^T\boldsymbol{x}$ 去估计原分布的期望值，接下来我们可以用观察到的数据去获得对权重向量 w 的最大似然估计。</p>
+<p>给定数据 $\left(\boldsymbol{x}_{1}, y_{1}\right), \ldots,\left(\boldsymbol{x}_{n}, y_{n}\right) \in \mathbb{R}^{d} \times \mathbb{R}$，我们用MLE可以获得 $(w, \sigma^2)$ 的 log-likelihood 如下： </p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^{n}\left\{-\frac{1}{2 \sigma^{2}}\left(\boldsymbol{x}_{i}^{\top} \boldsymbol{w}-y_{i}\right)^{2}+\frac{1}{2} \ln \frac{1}{2 \pi \sigma^{2}}\right\}+\left\{\text { 与 }\left(\boldsymbol{w}, \sigma^{2}\right)\text {无关的项}\right\}</script><p>那么最大化以上这个log-likelihood的 $\boldsymbol{w}$ 也就是最小化如下项的 $\boldsymbol{w}$:</p>
+<script type="math/tex; mode=display">
+{\qquad \frac{1}{n} \sum_{i=1}^{n}\left(\boldsymbol{x}_{i}^{\top} \boldsymbol{w}-y_{i}\right)^{2}}</script><h4 id="经验风险最小化-Empirical-Risk-Minimization-ERM"><a href="#经验风险最小化-Empirical-Risk-Minimization-ERM" class="headerlink" title="经验风险最小化 Empirical Risk Minimization (ERM)"></a>经验风险最小化 Empirical Risk Minimization (ERM)</h4><p>先不管什么是ERM，回到上文风险函数的概念，若损失函数是平方差损失，那么对于一个预测函数，它的风险为</p>
+<script type="math/tex; mode=display">
+R(f) = \mathbb{E}[(f(\boldsymbol{X})-Y)^2]</script><p>我们知道期望等于以概率为权重的每个结果的累加或积分，但其实我们并不知道原分布的概率密度函数，即不知道每个样本$(\boldsymbol{X}, Y)$ 的概率。那么要怎么计算风险呢？这里引入一个(<strong>经验分布</strong> <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Empirical_distribution_function"><strong>Empirical Distribution</strong></a> 的概念，它是对<strong>从原分布随机可重复采样</strong>的数据的经验衡量。简单来说：</p>
+<ul>
+<li>在 $(\boldsymbol{x}_1, y_1), …, (\boldsymbol{x}_n, y_n) $ 上的<strong>经验分布</strong> $P_n$ 就是一个给<strong>每个样本点</strong>赋予 <strong>1/n 概率</strong>的一个分布。</li>
+</ul>
+<p>其实很合理，我们不知道每个从原分布随机采样出来的$ (\boldsymbol{X}_i, Y_i)$ 数据点的概率，那就都给均等概率1/n好了，这样，如果原分布在某个区域的概率密度比较高，那么随机采样出来更多数据点的可能性高，即经验分布在该处的概率也会相应增高。</p>
+<p>好了，这样，虽然我们没办法得到预测函数真正的风险，但我们可以利用<strong>插入原理</strong>，用<strong>经验分布</strong> $P_n$来<strong>替代原分布</strong> $P$，得到对真正风险的一个估计，称之为<strong>经验风险</strong> <strong>Empirical Risk</strong>:</p>
+<script type="math/tex; mode=display">
+\hat R(f) = \mathbb{E}[(f(\boldsymbol{X})-Y)^2] = \frac{1}{n}\sum_{i=1}^n(f(\boldsymbol{x}_i)-y_i)^2</script><p>注意到这里的R头上带个符号，代表是预估的经验风险，而不是真正的风险</p>
+<p>所以接下来的任务就是找到一个 $f$ ，使得这个经验风险最小，写到这里，读者大概会发现，<strong>ERM</strong>和<strong>MLE</strong>在线性回归模型得出的结论竟出奇的一致！</p>
+<h3 id="C-ERM的解决之道"><a href="#C-ERM的解决之道" class="headerlink" title="C. ERM的解决之道"></a>C. ERM的解决之道</h3><p>对于一个线性回归方程 $f(\boldsymbol{x}) = w^T \boldsymbol{x}$， 它经验风险 Empirical Risk 本质上是什么？从几何的角度来看，如下图所示，它就是求每个采样数据点到超平面的竖直距离的平均值。那么要怎么求呢？</p>
+<p><img src="/img/post_img/ERM.png" alt="ERM"></p>
+<p>为了方便分析，我们先将ERM转换成矩阵的形式，首先是<strong>数据矩阵A</strong>和对应的<strong>标签b</strong></p>
+<script type="math/tex; mode=display">
+A = \frac{1}{\sqrt{n}}\begin{bmatrix}\boldsymbol{x}_1^T\\ \boldsymbol{x}_2^T\\ ... \\ \boldsymbol{x}_n^T \end{bmatrix} \in \mathbb{R}^{n\times d} \text{ and }
+\boldsymbol{b} = \frac{1}{\sqrt{n}}\begin{bmatrix}y_1\\ y_2\\ ... \\ y_n \end{bmatrix} \in \mathbb{R}^{n}</script><p>这里有几个点需要注意一下</p>
+<ul>
+<li>这里的 <strong>x</strong> 是粗体，代表的是一个向量(某个数据点 $\boldsymbol{X}=\boldsymbol{x}$)，我们默认假设总共有n个点，每个点的 <strong>x</strong> 的维度是d，即 $\boldsymbol{x} \in \mathbb{R}^d$， 所以A是一个 n行d列的数据矩阵。</li>
+<li>前面的系数 $\frac{1}{\sqrt{n}}$ 只是一种定义的选择，纯粹是为了后续计算方便，因为这样 Ab 就能生成一个 $\frac{1}{n}$ 的项，与ER中的 $\frac{1}{n}$ 对应。</li>
+</ul>
+<p>那么，经验风险就可以表示为：</p>
+<script type="math/tex; mode=display">
+\hat R(f) = \frac{1}{n}\sum_{i=1}^n(f(\boldsymbol{x}_i)-y_i)^2 = ||\boldsymbol{Aw-b}||_2^2</script><blockquote>
+<p>对于一个向量 <strong>v</strong>， $||\boldsymbol{v}||_2$ 代表它的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Norm_(mathematics">l2-norm</a>)，其等于 <strong>v</strong> 所有元素的平方和的开根，即$||\boldsymbol{v}||_2 = \sqrt{\sum \boldsymbol{v}_i^2}$</p>
+</blockquote>
+<p>求权重向量 <strong>w</strong> 是的经验风险最小的方法有很多种，这里介绍下最简单粗暴的直接求导，即令$\nabla \hat R(\boldsymbol w) = 0$：</p>
+<p>简单推到如下：</p>
+<p>首先，注意到 $\boldsymbol{Aw-b}$ 的结果是一个列向量，那么它 l2-norm 的平方就等于它和自身的乘积：</p>
+<script type="math/tex; mode=display">
+\hat R(\boldsymbol w) = ||\boldsymbol{Aw-b}||_2^2 = (\boldsymbol{Aw-b})^T (\boldsymbol{Aw-b})</script><p>所以倒数为</p>
+<script type="math/tex; mode=display">
+\nabla \hat R(\boldsymbol w) = \frac{d (\boldsymbol{Aw-b})^T (\boldsymbol{Aw-b})}{d\boldsymbol w} = 2\boldsymbol{A^T}(\boldsymbol{Aw-b}) = 0</script><p>求得</p>
+<script type="math/tex; mode=display">
+\boldsymbol{A^T}\boldsymbol{Aw} = \boldsymbol{A^Tb}</script><p>这玩意儿就是著名的 <strong>Normal Equation</strong>了。可以看到这是一个关于 <strong>w</strong> 的线性方程组，这个方程的每个解 <strong>w</strong> 就是对经验风险 $\hat R$ 的一个最小化。</p>
+<p>接下来，学过线性代数的大概都知道，可以通过<strong>高斯消元</strong>来求解了，复杂度是$O(nd^2)$，也叫作<strong>OLS</strong>，即Ordinary Least Square，解得</p>
+<script type="math/tex; mode=display">
+\hat w = (A^TA)^{-1}A^Tb</script><h3 id="D-ERM表现评估"><a href="#D-ERM表现评估" class="headerlink" title="D. ERM表现评估"></a>D. ERM表现评估</h3><h4 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h4><p>回忆一下，我们首先定义了<strong>损失函</strong>数，即给定一个 <strong>x, y</strong> 对，$L(f(\boldsymbol{x}), y)$ 衡量了当输出为y的时候，使用预测函数预测 $f(\boldsymbol{x})$的损失是多少，在回归问题中，我们常常使用的损失函数是平方差损失，即 $L(f(\boldsymbol{x}), y) = (f(\boldsymbol{x}) - y)^2$。</p>
+<p>紧接着，我们定义了<strong>风险函数</strong>，一个预测函数的（真实）<strong>风险</strong>为：</p>
+<script type="math/tex; mode=display">
+R(f) = \mathbb{E}_p[(f(\boldsymbol{X})-Y)^2] = \int\int p(\boldsymbol{x}, y)L(f(\boldsymbol{x}), y) d\boldsymbol{x} dy</script><p>其中p是<em>x</em>, y的分布，即产生数据的原分布。这里的风险衡量的是在期望的意义上，使用预测函数$f$来预测的风险有多大。我们的目标就是找到一个<strong>最小化风险的预测函数</strong>，我们在函数 $f$ 加个星号*上标，代表这是最优的参数，即：</p>
+<script type="math/tex; mode=display">
+f^* = \arg \min_f R(f)</script><p>但是，因为我们其实并不知道原分布是啥。退而求其次，我们利用插入原则，采用<strong>经验分布</strong>来替代<strong>原分布</strong>，然后通过最小化<strong>经验风险</strong>，来求解模型参数。这里的<strong>经验分布</strong>可以简单地理解为<em>给n个训练数据每个数据点赋予 1/n 概率的一个新的分布</em>。那么，根据定义我们可以得到：</p>
+<script type="math/tex; mode=display">
+\hat R(f) = \mathbb{E}_{ep}[(f(\boldsymbol{X})-Y)^2] = \frac{1}{n}\sum_{i=1}^n(f(\boldsymbol{x}_i)-y_i)^2</script><p>这样，我们通过ERM，得到预测函数：</p>
+<script type="math/tex; mode=display">
+\hat f = \arg \min_f \hat R(f)</script><h4 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h4><p>在线性回归中 $f(\boldsymbol{x}) = \boldsymbol{x}^T w$，所以这里用 $w$ 来区分不同的预测函数。首先先区分下几个量</p>
+<ul>
+<li>真实风险 $R$</li>
+<li>经验风险 $\hat R $，是个取决于训练数据的随机变量</li>
+<li>$\hat w$ 是让经验风险 $ \hat R $ 最小的解，也是个取决于训练数据的随机变量</li>
+<li>$w^*$ 是让真实风险 R 最小的最优解</li>
+</ul>
+<h5 id="ERM的真实风险-vs-最优解的真实风险"><a href="#ERM的真实风险-vs-最优解的真实风险" class="headerlink" title="ERM的真实风险 vs 最优解的真实风险"></a>ERM的真实风险 vs 最优解的真实风险</h5><p>首先人们最关心的肯定就是 $\hat w$ 和 $w^<em>$ 的真实风险差距了，因为说到底，我们想找的其实是 $w^</em>$，但是没办法，只能找到一个近似值 $\hat w$，并且期待 $R(\hat w) \approx R(w^*)$。 事实上，我们可以证明，当 $n\rightarrow \infin$时，有</p>
+<script type="math/tex; mode=display">
+R(\hat w) \rightarrow R(w^*) + \frac{tr(cov(\epsilon W))}{n}</script><p>其中 $W = \mathbb{E}[XX^T]^{-1/2}，\epsilon = Y-X^Tw^*$ 。</p>
+<p>证明过长，此处便不扩展，只以线性回归模型 $Y|X=x \sim N(x^T w, \sigma^2)$ 为例子，那么上边这个定理的结果可以简化为：</p>
+<script type="math/tex; mode=display">
+R(\hat w) \rightarrow R(w^*) + \frac{\sigma^2d}{n} = (1+\frac{d}{n})\sigma^2</script><h5 id="ERM的经验风险-vs-真实风险"><a href="#ERM的经验风险-vs-真实风险" class="headerlink" title="ERM的经验风险 vs 真实风险"></a>ERM的经验风险 vs 真实风险</h5><p>那么ERM的解 $\hat w$ 的风险和最优解 $w^*$ 的风险又有什么关系呢？因为前者是个随机变量，我们尝试比较它们的期望值，即 $\mathbb{E}[\hat R(\hat w)]$ 和 $ \mathbb{E}[R(\hat w)]$ 之间的关系。</p>
+<p>直觉上，$\hat w$ 就是在训练数据上求得的最小化经验风险（即在训练数据上的风险）的解，那么其在原分布上的真实风险应该是更大的，这就像是测试数据的loss一般总比训练数据上的loss大一样。</p>
+<p>实际上确实 $\mathbb{E}[\hat R(\hat w)] \le \mathbb{E}[R(\hat w)]$ ，借助最优解 $w^*$ 作为桥梁，证明起来也不复杂。</p>
+<p>先尝试重新阐述下问题，如果 $\left(\boldsymbol{x}_{1}, y_{1}\right), \ldots,\left(\boldsymbol{x}_{n}, y_{n}\right), \left(\boldsymbol{x}, y\right) \in \mathbb{R}^{d} \times \mathbb{R}$ 是从某个概率分布 P 上采集的 <strong>独立同分布</strong> 随机数据点，为了方面描述，以下的风险都是针对平方损失而言，那么我们有：</p>
+<p>对于最优解 $w^*$，我们有：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}\mathbb{E}[\hat R(w^*)] &= \mathbb{E}[\frac{1}{n}\sum_{i=1}^n(\boldsymbol{x}^T_i w^* - y_i)^2]\\&=\frac{1}{n}\sum_{i=1}^n\mathbb{E}[(\boldsymbol{x}^T_i w^* - y_i)^2]\\&=\frac{1}{n}\sum_{i=1}^n\mathbb{E}[(\boldsymbol{x}^T w^* - y)^2] \\&= \frac{1}{n}\sum_{i=1}^nR(w^*) \\&= R(w^*)\end{aligned}</script><p>注意到第三行可以将 $\boldsymbol{x}^T_i, y_i$ 替换成 $\boldsymbol{x}^T, y$ 是因为它们是独立同分布的。</p>
+<p>然后，因为 $\hat w = \arg \min_w \hat R(w)$ 以及 $w^<em> = \arg \min_w R(w)$，我们有 $\hat R(\hat w)\le \hat R(w^</em>)$ 和 $R(w^*)\le R(\hat w)$，连立起来就是</p>
+<script type="math/tex; mode=display">
+\mathbb{E}[\hat R(\hat w)] \le \mathbb{E}[\hat R(w)] = R(w) \le \mathbb{E}[R(\hat w)]</script><h5 id="过拟合-Overfitting"><a href="#过拟合-Overfitting" class="headerlink" title="过拟合 Overfitting"></a>过拟合 Overfitting</h5><p>啥是过拟合？在上一小节中，我们证明了EMR的解的经验风险是小于等于真实风险的，当这个<strong>经验风险远小于真实风险</strong>的时候，我们称之为<strong>过拟合</strong>。</p>
+<p>举个栗子，一般我们称一个特征变换 $\varphi(x) = (1, x, x^2,…,x^k)$ 作为一个 <strong>k</strong> 度的多项式展开，注意到变换后的特征维度是 k+1 维，一般来说，如果你的<strong>数据点个数</strong>小于等于 <strong>k+1</strong> 的话，都可以用它来完美拟合，即找到一个ERM的解使得经验风险为零，即 $\hat R(\hat w) = 0$，即便是真实风险远大于零，即 $R(\hat w) \gg 0$。</p>
+<p><img src="/img/post_img/overfitting.png" alt="overfitting"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/27/Leetcode-Journey/" rel="prev" title="Leetcode Journey">
+      <i class="fa fa-chevron-left"></i> Leetcode Journey
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/01/02/Binary-Search/" rel="next" title="All You Need to Know About Binary Search">
+      All You Need to Know About Binary Search <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98%E4%B8%AD%E7%9A%84%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">一、回归问题中的统计模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E8%BE%93%E5%85%A5%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">无输入模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E4%BC%98%E9%A2%84%E6%B5%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">最优预测</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E8%BE%93%E5%85%A5%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">有输入模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E4%BC%98%E9%A2%84%E6%B5%8B-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">最优预测</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">二、线性回归模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-%E5%A2%9E%E5%BC%BA%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E2%80%94%E2%80%94%E7%89%B9%E5%BE%81%E5%8F%98%E6%8D%A2"><span class="nav-number">2.1.</span> <span class="nav-text">A. 增强线性回归——特征变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%8B%9F%E5%90%88%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">B. 拟合数据的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1-Maximum-Likelihood-Estimation-MLE"><span class="nav-number">2.2.1.</span> <span class="nav-text">最大似然估计 Maximum Likelihood Estimation (MLE)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%8F%E9%AA%8C%E9%A3%8E%E9%99%A9%E6%9C%80%E5%B0%8F%E5%8C%96-Empirical-Risk-Minimization-ERM"><span class="nav-number">2.2.2.</span> <span class="nav-text">经验风险最小化 Empirical Risk Minimization (ERM)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-ERM%E7%9A%84%E8%A7%A3%E5%86%B3%E4%B9%8B%E9%81%93"><span class="nav-number">2.3.</span> <span class="nav-text">C. ERM的解决之道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-ERM%E8%A1%A8%E7%8E%B0%E8%AF%84%E4%BC%B0"><span class="nav-number">2.4.</span> <span class="nav-text">D. ERM表现评估</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E9%A1%BE"><span class="nav-number">2.4.1.</span> <span class="nav-text">回顾</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0"><span class="nav-number">2.4.2.</span> <span class="nav-text">评估</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ERM%E7%9A%84%E7%9C%9F%E5%AE%9E%E9%A3%8E%E9%99%A9-vs-%E6%9C%80%E4%BC%98%E8%A7%A3%E7%9A%84%E7%9C%9F%E5%AE%9E%E9%A3%8E%E9%99%A9"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">ERM的真实风险 vs 最优解的真实风险</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ERM%E7%9A%84%E7%BB%8F%E9%AA%8C%E9%A3%8E%E9%99%A9-vs-%E7%9C%9F%E5%AE%9E%E9%A3%8E%E9%99%A9"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">ERM的经验风险 vs 真实风险</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%87%E6%8B%9F%E5%90%88-Overfitting"><span class="nav-number">2.4.2.3.</span> <span class="nav-text">过拟合 Overfitting</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/img/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Crysple" title="GitHub → https://github.com/Crysple" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:gdzejlin@gmail.com" title="E-Mail → mailto:gdzejlin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-Danny"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+  
+
+</body>
+</html>

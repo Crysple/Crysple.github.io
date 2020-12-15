@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property='og:image' content="/img/ogimage.jpeg">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/avatar.jpeg">
+  <link rel="mask-icon" href="/img/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideRightIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="自从过完年后，生活变得越来越匆忙，平日里时间基本为新的论文和学习英语所占用，但仍想抽出一小部分时间复习以往学过的机器学习的知识，并做个总结。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模型的评估和选择">
+<meta property="og:url" content="http://yoursite.com/2018/03/12/2018-03-12-%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AF%84%E4%BC%B0%E5%92%8C%E9%80%89%E6%8B%A9/index.html">
+<meta property="og:site_name" content="Zejun Lin&#39;s Blog">
+<meta property="og:description" content="自从过完年后，生活变得越来越匆忙，平日里时间基本为新的论文和学习英语所占用，但仍想抽出一小部分时间复习以往学过的机器学习的知识，并做个总结。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/sw0bgiblw7kq7r6js0oo08qh/confusionMatrix.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/n3pk9kyftzl0tif0orvte3o5/PR.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/ufkhh182if1whuhjat3s4dzg/PR.jpg">
+<meta property="article:published_time" content="2018-03-12T04:00:00.000Z">
+<meta property="article:modified_time" content="2018-06-25T03:29:13.000Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Machine Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.zybuluo.com/jyyzzj/sw0bgiblw7kq7r6js0oo08qh/confusionMatrix.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2018/03/12/2018-03-12-%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AF%84%E4%BC%B0%E5%92%8C%E9%80%89%E6%8B%A9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>模型的评估和选择 | Zejun Lin's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zejun Lin's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">异国漂泊，野蛮生长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/12/2018-03-12-%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AF%84%E4%BC%B0%E5%92%8C%E9%80%89%E6%8B%A9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/avatar.jpeg">
+      <meta itemprop="name" content="Daniel">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zejun Lin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          模型的评估和选择
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-03-12 00:00:00" itemprop="dateCreated datePublished" datetime="2018-03-12T00:00:00-04:00">2018-03-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2018-06-24 23:29:13" itemprop="dateModified" datetime="2018-06-24T23:29:13-04:00">2018-06-24</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>自从过完年后，生活变得越来越匆忙，平日里时间基本为新的论文和学习英语所占用，但仍想抽出一小部分时间复习以往学过的机器学习的知识，并做个总结。</p>
+<a id="more"></a>
+<hr>
+<h2 id="模型评估"><a href="#模型评估" class="headerlink" title="模型评估"></a>模型评估</h2><hr>
+<h3 id="误差"><a href="#误差" class="headerlink" title="误差"></a>误差</h3><blockquote>
+<p>通常，在训练一个学习器的时候，我们会将手上现有的数据按一定比例分为<strong>训练集</strong>和<strong>测试集</strong>，使用训练集去训练这个学习器，并用测试集去测试它的错误率。</p>
+</blockquote>
+<ul>
+<li>这里，我们把学习器<ul>
+<li>在训练集上的误差称为<strong>”训练误差“(training error)</strong>或者<strong>”经验误差“(empirical error)</strong>，</li>
+<li>把其在测试集上的误差称为<strong>”泛化误差“(generalization error)</strong></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="过拟合-amp-欠拟合"><a href="#过拟合-amp-欠拟合" class="headerlink" title="过拟合&amp;欠拟合"></a>过拟合&amp;欠拟合</h3><blockquote>
+<p>对于训练集和测试集的分法，其实是有讲究的，否则便很容易造成一些问题，比如学习器在训练集上表现得很好，而在测试集却很糟糕，我们将之称为<strong>“过拟合”(overfitting)</strong>，与之相对的是<strong>“欠拟合”(underfitting)</strong>，是指即便是在训练集上，学习器也表现的不好</p>
+</blockquote>
+<ul>
+<li><p>对于过拟合，实质上是学习器过度拟合了训练数据，即对于训练数据的特征，无论好坏，一股脑全学了，而有些特征，仅仅是训练数据中特有的特性，在其他数据上并不存在这么一些特性，这就导致了学习器的<strong>泛化能力弱</strong>，在测试集上表现糟糕。</p>
+</li>
+<li><p>这就好比你想学习追妹子，你去问你那可爱的小表妹喜欢什么样的男生，然后她告诉你她喜欢干净帅气的男生，同时她也喜欢周杰伦的歌，喜欢吃酸菜鱼吃榴莲，喜欢玩LOL…总之她告诉你一堆规则。好了，现在你安安分分地修炼，直到有一天你终于完美地符合这些规则了，训练完成。你找到个妹子超级自信地去追，然而你发现这好像没有什么卵用，妹子告你你她只喜欢干净帅气的男生，其它的她都不care，甚至，她讨厌吃辣的，觉得榴莲很臭，并且超级讨厌玩游戏的男生，接着你便gg了。在训练数据表现好，在测试数据表现糟糕，这便是<strong>过拟合</strong>了。</p>
+</li>
+</ul>
+<hr>
+<h3 id="评估方法"><a href="#评估方法" class="headerlink" title="评估方法"></a>评估方法</h3><h4 id="留出法-hold-out"><a href="#留出法-hold-out" class="headerlink" title="留出法(hold-out)"></a>留出法(hold-out)</h4><p>这是最常用的方法，即将数据集D直接按一定的比例随机分为两个互斥的集合，一个作为训练集，一个作为测试集。</p>
+<h4 id="交叉验证法-cross-validation）"><a href="#交叉验证法-cross-validation）" class="headerlink" title="交叉验证法(cross validation）"></a>交叉验证法(cross validation）</h4><p>这便是大名鼎鼎的CV方法了，简单来说，就是将数据集分成k个大小相似的互斥子集，然后每次选一个子集作为测试集，其他的k-1个合并作为训练集合训练模型，这样，总共便可进行k次训练和测试，最终再返回这k次测试结果的均值作为最终结果。因此，CV也被称做k折交叉验证（k-fold cross validation），其中，k的取值尤为重要。</p>
+<h4 id="自助法"><a href="#自助法" class="headerlink" title="自助法"></a>自助法</h4><p>按照前边的做法，我们训练学习器的时候，其实用的只是整个数据集的一部分，但其实我们最终想要的是用整个数据集训练出来的学习器，这难免会造成一定的偏差，特别是对于整个数据集本身就比较小的情况。</p>
+<ul>
+<li><strong>自助法</strong>针对的便是这种情况，其做法是对数据集D进行采样。</li>
+<li>假设D有m个样本，其流程为<ul>
+<li>不断随机选取数据集D中的一个样本</li>
+<li>拷贝后添加到另一个空数据集D’中</li>
+<li>总共重复m次</li>
+</ul>
+</li>
+<li>最终采用D’为训练集，而D/D’为测试集。</li>
+</ul>
+<h4 id="调参与验证集"><a href="#调参与验证集" class="headerlink" title="调参与验证集"></a>调参与验证集</h4><p>由上边我们知道，对于一个包含m个样本的数据集，最终的模型成品必定是使用这m个样本的整个数据集训练出来的，而这个模型在实际使用中遇到的数据才称为测试数据。</p>
+<p>同时，我们知道，为了学习数据分布，一般模型都是有大量的参数需要调整的，这里便引申出来另外一个概念——验证集(validation set）。</p>
+<p>为了与前边区分，一般把模型评估和选择中用于评估测试的数据称为验证集，用于模型选择和调参，而用测试集来评估模型在实际使用中的泛化能力。层级关系如下：</p>
+<ul>
+<li>整个数据集<ul>
+<li>训练数据<ul>
+<li>训练集</li>
+<li>验证集</li>
+</ul>
+</li>
+<li>测试数据</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="性能度量"><a href="#性能度量" class="headerlink" title="性能度量"></a>性能度量</h2><blockquote>
+<p>性能度量是为了对学习器的泛化性能进行评估的，衡量模型泛化能力的评价标准</p>
+</blockquote>
+<hr>
+<h3 id="均方误差"><a href="#均方误差" class="headerlink" title="均方误差"></a>均方误差</h3><p>对于回归任务，最常用的是“均方误差”(mean squared error)</p>
+<ul>
+<li>给定:<ul>
+<li>学习器f</li>
+<li>数据集$D={(x_1,y_1),(x_2,y_2),…,(x_m,y_m)}$<ul>
+<li>$x_i$为输入</li>
+<li>$y_i$为$x_i$的真实标签，即答案</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>则均方误差为：<script type="math/tex; mode=display">E(f;D)=\frac{1}{m}\sum_{i=1}^m (f(x_i)-y_i)^2</script></li>
+</ul>
+<hr>
+<h3 id="错误率和精度"><a href="#错误率和精度" class="headerlink" title="错误率和精度"></a>错误率和精度</h3><p>前面所提到的错误率和精度也是一种性能度量，既适用于二分类，也可以用于多分类，这个比较简单便不多加赘述。</p>
+<hr>
+<h3 id="查准率Precision、查全率Recall"><a href="#查准率Precision、查全率Recall" class="headerlink" title="查准率Precision、查全率Recall"></a>查准率Precision、查全率Recall</h3><p>这里先阐述一个概念，对于二分类来说，一般我们把要识别（查找）出来的类别叫做<strong>正类</strong>，其样本叫做<strong>正样本</strong>，或者<strong>正例</strong>。而把余下的那些干扰的叫做<strong>负类</strong>，样本自然叫<strong>负样本</strong>或者<strong>负例</strong>。</p>
+<p>譬如说，对于一个学习猪脸识别的学习器来说，其输入为一张照片，倘若输出为判断照片里是否有猪脸，那么输入的照片里如果有猪脸，它就是一个正样，反之，如果照片里只是一张椅子，或者一个人这些无相关的东西，那么就是一个负样</p>
+<ul>
+<li><strong>查准率</strong>，顾名思义，即你查出来的所有正例里面，是真正的正例的所占的比例有多少个，即是说，你这个学习器，它有多准。<ul>
+<li>比如说，学习器查出10张有猪脸的相片，但其实这10张相片只有8张是有猪脸的，其余两张并没有出现猪脸，那么其查准率就是80%。</li>
+</ul>
+</li>
+<li><p><strong>查全率</strong>，同样的，看名字，查得有多全。即学习器所查出来的正例，占样本里总的正例的比例。</p>
+<ul>
+<li>比如说，我一共有100张照片，其中有50张是有猪脸的，学习器查出来有60张有猪脸的照片，但其实这60张里面只有40张照片是有猪脸的，也就是说，50张有猪脸的照片里面，学习器只挑出了40张，那么其查全率就是$40/50=80\% $。顺带一说，这个例子里其查准率为$40/60=2/3 \approx 66.7\%$</li>
+</ul>
+</li>
+<li><p>在分类任务中，有个很常用的矩阵，叫做“<strong>混淆矩阵</strong>”(<strong>confusion matrix</strong>)，是以类别间的关系评价精度的一种标准格式，以二分类为例，描述的即以下四者：</p>
+<ul>
+<li>真正例 True Positive TP — 正确的肯定数目</li>
+<li>假正例 False Positive FP — 误报数目</li>
+<li>真反例 True Negative TN — 正确否定的数目</li>
+<li>假反例 False Negative FN — 漏报数目</li>
+</ul>
+</li>
+<li><p><img src="http://static.zybuluo.com/jyyzzj/sw0bgiblw7kq7r6js0oo08qh/confusionMatrix.jpg" alt="confusionMatrix.jpg-11.8kB"></p>
+<ul>
+<li>Precision = TP/(TP+FP)</li>
+<li>Recall = TP/(TP+FN)</li>
+</ul>
+</li>
+</ul>
+<p>这样，我们便可以很方便地计算出查全率Recall和查准率Precision。</p>
+<hr>
+<h3 id="P-R曲线和F1"><a href="#P-R曲线和F1" class="headerlink" title="P-R曲线和F1"></a>P-R曲线和F1</h3><p>为什么人们要引出Recall和Precision这两个概念呢？单单Accuracy不够吗？<br>是的，有些时候，人们对于一个学习器侧重点的不同，导致了其关注点的不同。比如下面两种情况：</p>
+<ul>
+<li>自然灾害的预测<ul>
+<li>对于像地震海啸之类的自然灾害的预测，人们所期望的Recall率是要很高的，即宁可预测错多几次，也要把所有灾害都给预测到，未雨绸膜也好，曲突徙薪也罢，总是没有坏处的。这时候Precision就显得不是十分重要了。</li>
+</ul>
+</li>
+<li>嫌疑犯的定罪<ul>
+<li>相反，对于另外的一些情形像嫌疑犯定罪，本着不能冤枉一个好人的原则，Precision的地位在这里就比较突出了，人们希望这里的分类器，预测出来的总是真的，即便有时recall低点（放走了罪犯），亦是值得的。</li>
+</ul>
+</li>
+</ul>
+<p>另外，对于一个二分类的学习器来说，一般它会输出每个样本属于正类的概率，这时，就需要一个<strong>Cutoff</strong>，即<strong>阈值</strong>的点来衡量了，我们把概率低于这个点的分到负类，高于这个点的分到正类。<br>自然地，不难发现，这个cutoff点的选取便成为了关键。对于一个学习器，分别选取不同的阈值，就会有一系列的混淆矩阵，也就会有一系列的Recall和Precision值的对，把这些对在坐标系中按照cutoff值排序后连起来，便形成了<strong>P-R曲线</strong><br><img src="http://static.zybuluo.com/jyyzzj/n3pk9kyftzl0tif0orvte3o5/PR.jpg" alt="PR.jpg-6.7kB"></p>
+<p>由图可知，Recall和Precision大体上是呈负相关的，但要注意的一点是，这个曲线<strong>并不一定经过</strong>(0,1)和(1,0)这两个点。</p>
+<p>既然Recall和Precision是负相关的关系，那么如何根据这两个量度量一个学习器的综合性能呢？有以下一些方式：</p>
+<ul>
+<li><strong>平衡点</strong> (Break-Even Point, <strong>BEP</strong>)<ul>
+<li>这个很容易理解，即以当Recall=Precision时的值为衡量标准</li>
+<li>即上图曲线与直线y=x的交点</li>
+</ul>
+</li>
+<li>F1<ul>
+<li>当然BEP未免过于简单，于是便衍生出了F1</li>
+<li>F1是Recall和Precision的调和平均数</li>
+<li><script type="math/tex; mode=display">F1 = \frac{1}{\frac{1}{Recall}+\frac{1}{Precision}}</script></li>
+</ul>
+</li>
+</ul>
+<p>另外一个概念是，当学习器被应用到多个数据集上(即获得多个混淆矩阵)时，我们该如何综合考量？以下是两种衡量方法：</p>
+<ul>
+<li><strong>宏F1</strong> (<strong>Macro-F1</strong>)<ul>
+<li>流程：<ul>
+<li>分别计算各个混淆矩阵的Recall和Precision</li>
+<li>计算Recall和Precision的平均值</li>
+<li>根据平均值计算F1</li>
+</ul>
+</li>
+<li>公式：<ul>
+<li>$\text{macro-P} = \frac{1}{n}\sum_{i=1}^{n} P_i$</li>
+<li>$\text{macro-R} = \frac{1}{n}\sum_{i=1}^{n} R_i$</li>
+<li>$\text{macro-F1} = \frac{1}{\frac{1}{macro-R}+\frac{1}{macro-P}}$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>微F1</strong> (<strong>Micro-F1</strong>)<ul>
+<li>流程:<ul>
+<li>先将混淆矩阵的各个元素进行平均得到$\overline {TP},\overline{FP},\overline{TN},\overline{FN}$</li>
+<li>根据这些均值计算出Recall和Precision</li>
+<li>计算F1</li>
+</ul>
+</li>
+<li>公式：<ul>
+<li>$\text{micro-R}=\frac{\overline{TP}}{\overline{TP}+\overline{FN}}$</li>
+<li>$\text{micro-P}=\frac{\overline{TP}}{\overline{TP}+\overline{FP}}$</li>
+<li>$\text{micro-F1} = \frac{1}{\frac{1}{micro-R}+\frac{1}{micro-P}}$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="ROC和AUC"><a href="#ROC和AUC" class="headerlink" title="ROC和AUC"></a>ROC和AUC</h3><ul>
+<li><strong>ROC</strong><ul>
+<li>即Receiver Operating Characteristic，“受试者工作特征”</li>
+<li>就其表示的含义，玄学地讲，该曲线上每个点（即每个阈值对应的点）反映着对同一信号刺激的感受性，即其特异性和敏感性，详细内容见下。</li>
+</ul>
+</li>
+<li><strong>AUC</strong><ul>
+<li>即Area Under Curve，是指ROC曲线下面的面积</li>
+<li>一般在(0.5,1)区间</li>
+<li>如若为0.5，则和随机猜测没有差别</li>
+<li>如若模型十分准确，则为1</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://static.zybuluo.com/jyyzzj/ufkhh182if1whuhjat3s4dzg/PR.jpg" alt="PR.jpg-6.9kB"></p>
+<ul>
+<li>该图每个点对应一个阈值</li>
+<li>横轴：<ul>
+<li>FPR (False Positive Rate)</li>
+<li>1 - 特异度（Specificity）</li>
+<li>负类覆盖率</li>
+<li>FPR = $\frac{FP}{FP+TN}$</li>
+<li>FPR越大，预测正类中实际负类就越多</li>
+</ul>
+</li>
+<li>纵轴：<ul>
+<li>TPR (True Positive Rate)</li>
+<li>灵敏度 Sensitivity</li>
+<li>正类覆盖率，其实就是召回率Recall</li>
+<li>TPR = $\frac{TP}{TP+FN}$</li>
+<li>TPR越大，预测正类中实际正类就越多</li>
+</ul>
+</li>
+<li>目标: <ul>
+<li>TPR=1 &amp;&amp; FPR=0，即图中(0,1)点</li>
+<li>换种说法，即曲线偏离直线y=x越大，AUC面积越大，效果越好</li>
+</ul>
+</li>
+</ul>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/03/19/2018-03-19-fucking-life/" rel="prev" title="乘风破浪会有时">
+      <i class="fa fa-chevron-left"></i> 乘风破浪会有时
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/03/01/2018-02-09-A-Intuitive-Deduction-of-Multinomial-Distribution/" rel="next" title="A Intuitive Deduction of Multinomial Distribution">
+      A Intuitive Deduction of Multinomial Distribution <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0"><span class="nav-number">1.</span> <span class="nav-text">模型评估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%B7%AE"><span class="nav-number">1.1.</span> <span class="nav-text">误差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%8B%9F%E5%90%88-amp-%E6%AC%A0%E6%8B%9F%E5%90%88"><span class="nav-number">1.2.</span> <span class="nav-text">过拟合&amp;欠拟合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">评估方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%95%99%E5%87%BA%E6%B3%95-hold-out"><span class="nav-number">1.3.1.</span> <span class="nav-text">留出法(hold-out)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81%E6%B3%95-cross-validation%EF%BC%89"><span class="nav-number">1.3.2.</span> <span class="nav-text">交叉验证法(cross validation）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A9%E6%B3%95"><span class="nav-number">1.3.3.</span> <span class="nav-text">自助法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E5%8F%82%E4%B8%8E%E9%AA%8C%E8%AF%81%E9%9B%86"><span class="nav-number">1.3.4.</span> <span class="nav-text">调参与验证集</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%BA%A6%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">性能度量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%87%E6%96%B9%E8%AF%AF%E5%B7%AE"><span class="nav-number">2.1.</span> <span class="nav-text">均方误差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E7%8E%87%E5%92%8C%E7%B2%BE%E5%BA%A6"><span class="nav-number">2.2.</span> <span class="nav-text">错误率和精度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E5%87%86%E7%8E%87Precision%E3%80%81%E6%9F%A5%E5%85%A8%E7%8E%87Recall"><span class="nav-number">2.3.</span> <span class="nav-text">查准率Precision、查全率Recall</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#P-R%E6%9B%B2%E7%BA%BF%E5%92%8CF1"><span class="nav-number">2.4.</span> <span class="nav-text">P-R曲线和F1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROC%E5%92%8CAUC"><span class="nav-number">2.5.</span> <span class="nav-text">ROC和AUC</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/img/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Crysple" title="GitHub → https://github.com/Crysple" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:gdzejlin@gmail.com" title="E-Mail → mailto:gdzejlin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-Danny"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+  
+
+</body>
+</html>

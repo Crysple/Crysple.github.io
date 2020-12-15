@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property='og:image' content="/img/ogimage.jpeg">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/avatar.jpeg">
+  <link rel="mask-icon" href="/img/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideRightIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="学了一学期的计算机图形学，虽然学的不深，OpenGL编程也是浅尝则止，终归算是初步窥得一眼这个领域大体上的景致，想起当初选这门课，是想以后工作了，大抵是不会这么花时间来了解这些东西的了，而这又是我感兴趣想要弄懂弄明白的东西，再有便是想打多些c++代码，总的来说我还是蛮喜欢c++的。 月末是计图期末考试，老师说，有些硬知识还是得考一考的，于是便复习了整学期的ppt，简单地整理出一些笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Notes for Computer Graphics">
+<meta property="og:url" content="http://yoursite.com/2017/12/28/2017-12-28-Notes-For-Computer-Graphics/index.html">
+<meta property="og:site_name" content="Zejun Lin&#39;s Blog">
+<meta property="og:description" content="学了一学期的计算机图形学，虽然学的不深，OpenGL编程也是浅尝则止，终归算是初步窥得一眼这个领域大体上的景致，想起当初选这门课，是想以后工作了，大抵是不会这么花时间来了解这些东西的了，而这又是我感兴趣想要弄懂弄明白的东西，再有便是想打多些c++代码，总的来说我还是蛮喜欢c++的。 月末是计图期末考试，老师说，有些硬知识还是得考一考的，于是便复习了整学期的ppt，简单地整理出一些笔记">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/kwjuefvv9xqnfavor8ryixw1/image_1c2e25vgi18bcfmu1oucb1n2p9.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/c7il5vyj3q9huyxb0to0k4ve/Screen%20Shot%202017-12-28%20at%204.02.47%20PM.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/1jlwwg3mt6j57gq17elqc9hl/Screen%20Shot%202017-12-28%20at%204.11.49%20PM.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/m06esewdax0k28148zbe7s7k/Screen%20Shot%202017-12-28%20at%204.19.04%20PM.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/4j356palv1iywwi5jvic1tid/image_1c2e4ckmd1dhpoho1v4vpu41eh59.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/d0lspc24wprvcb44w5lfuevy/image_1c2b8lleqbffm3o1o1io2069e9.png">
+<meta property="og:image" content="http://static.zybuluo.com/jyyzzj/jctjt8tkjtp60q2usjcmlf7a/image_1c2bu8912krq17v029nasu1t3c9.png">
+<meta property="article:published_time" content="2017-12-28T05:00:00.000Z">
+<meta property="article:modified_time" content="2019-12-21T21:40:27.000Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Exam Review">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.zybuluo.com/jyyzzj/kwjuefvv9xqnfavor8ryixw1/image_1c2e25vgi18bcfmu1oucb1n2p9.png">
+
+<link rel="canonical" href="http://yoursite.com/2017/12/28/2017-12-28-Notes-For-Computer-Graphics/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Notes for Computer Graphics | Zejun Lin's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zejun Lin's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">异国漂泊，野蛮生长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/28/2017-12-28-Notes-For-Computer-Graphics/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/avatar.jpeg">
+      <meta itemprop="name" content="Daniel">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zejun Lin's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Notes for Computer Graphics
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-12-28 00:00:00" itemprop="dateCreated datePublished" datetime="2017-12-28T00:00:00-05:00">2017-12-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-21 16:40:27" itemprop="dateModified" datetime="2019-12-21T16:40:27-05:00">2019-12-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>学了一学期的计算机图形学，虽然学的不深，OpenGL编程也是浅尝则止，终归算是初步窥得一眼这个领域大体上的景致，想起当初选这门课，是想以后工作了，大抵是不会这么花时间来了解这些东西的了，而这又是我感兴趣想要弄懂弄明白的东西，再有便是想打多些c++代码，总的来说我还是蛮喜欢c++的。</p>
+<p>月末是计图期末考试，老师说，有些硬知识还是得考一考的，于是便复习了整学期的ppt，简单地整理出一些笔记</p>
+<a id="more"></a>
+<hr>
+<h2 id="Chapter-i-when-i-lt-5"><a href="#Chapter-i-when-i-lt-5" class="headerlink" title="Chapter i when i&lt;5"></a>Chapter i when i&lt;5</h2><ul>
+<li>What is CG? — Relative Disciplines<br>  <img src="http://static.zybuluo.com/jyyzzj/kwjuefvv9xqnfavor8ryixw1/image_1c2e25vgi18bcfmu1oucb1n2p9.png" alt="image_1c2e25vgi18bcfmu1oucb1n2p9.png-128.5kB"></li>
+<li><p>Graphics System<br>  <img src="http://static.zybuluo.com/jyyzzj/c7il5vyj3q9huyxb0to0k4ve/Screen%20Shot%202017-12-28%20at%204.02.47%20PM.png" alt="Screen Shot 2017-12-28 at 4.02.47 PM.png-381.1kB"></p>
+</li>
+<li><p>Graphics pipeline</p>
+<ul>
+<li>The Modeling pipeline<br>  <img src="http://static.zybuluo.com/jyyzzj/1jlwwg3mt6j57gq17elqc9hl/Screen%20Shot%202017-12-28%20at%204.11.49%20PM.png" alt="Screen Shot 2017-12-28 at 4.11.49 PM.png-115.8kB"></li>
+<li>The Rendering pipeline<ul>
+<li>The modeling pipeline only maps vertices between the various spaces</li>
+<li>All vertices are processed to form an image in frame buffer<br><img src="http://static.zybuluo.com/jyyzzj/m06esewdax0k28148zbe7s7k/Screen%20Shot%202017-12-28%20at%204.19.04%20PM.png" alt="Screen Shot 2017-12-28 at 4.19.04 PM.png-109.3kB"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Shaders</p>
+<ul>
+<li>Programs used to control GPU</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://static.zybuluo.com/jyyzzj/4j356palv1iywwi5jvic1tid/image_1c2e4ckmd1dhpoho1v4vpu41eh59.png" alt="image_1c2e4ckmd1dhpoho1v4vpu41eh59.png-79.9kB"></p>
+<ul>
+<li>Libraries about OpenGL<ul>
+<li>GLU (OpenGL Utility Library)<ul>
+<li>Provides functionality in OpenGL core but avoids having to rewrite code</li>
+</ul>
+</li>
+<li>GLUT (OpenGL Utility Toolkit)<ul>
+<li>Provides functionality common to all window system</li>
+<li>Was created long ago and has been unchanged</li>
+</ul>
+</li>
+<li>FreeGLUT updates GLUT</li>
+<li>GLEW (OpenGL Extension Wrangler Library)<ul>
+<li>Makes it easy to access OpenGL extensions available on a particular system</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Dict</p>
+<pre><code>To **tessellate** is to make a pattern using identical shapes, creating a consistent pattern like a honeycomb.
+</code></pre><h4 id="About-the-order-of-the-tranformation-matrices"><a href="#About-the-order-of-the-tranformation-matrices" class="headerlink" title="About the order of the tranformation matrices"></a>About the order of the tranformation matrices</h4><p>Any combination of the order S<em>R</em>T gives a valid transformation matrix. However, it is pretty common to first scale the object, then rotate it, then translate it:</p>
+<pre><code>L = T * R * S
+</code></pre><p>If you do not do it in that order, then a non-uniform scaling will be affected by the previous rotation, making your object look skewed. And the rotation will be affected by the translation, making the final position of your object very different from what the value of the translation would make you expect.</p>
+<h4 id="Collision-Detection-Algorithm"><a href="#Collision-Detection-Algorithm" class="headerlink" title="Collision Detection Algorithm"></a>Collision Detection Algorithm</h4><ul>
+<li>两个包围球或包围盒：其球心距小于半径和</li>
+<li>一物所有三角形于另一包围球，若顶点球心距离小于三角形最长边+球半径，则可能，或者三角形外接圆与包围球圆球心距离小于两半径和，则可能</li>
+<li>判断两三角形————判断一三角形每个顶点是否在另一个三角形平面的一边，如不在则可能碰撞</li>
+<li>交点Q，若以下三不等式成立则Q在三角形$P_1,P_2,P_3$里面<ul>
+<li>$N\cdot ((P_1-P_0)\times (Q-P_0)) \gt 0$</li>
+<li>$N\cdot ((P_2-P_1)\times (Q-P_1)) \gt 0$</li>
+<li>$N\cdot ((P_0-P_2)\times (Q-P_2)) \gt 0$</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="Chapter-5-Lighting-and-Shading"><a href="#Chapter-5-Lighting-and-Shading" class="headerlink" title="Chapter 5 Lighting and Shading"></a>Chapter 5 Lighting and Shading</h2><ul>
+<li><p>Current Light Model — <strong>Local Lighting Model</strong> (LLM)</p>
+<ul>
+<li>consider only lights in the scene, ignore reflected lights</li>
+<li>Three Components:<ul>
+<li>Ambient Light<ul>
+<li>$L_0$ — scene-defined ambient value</li>
+<li>$L_A$ — individual light contributions from ambient light</li>
+<li>$C_A$ — material ambient value</li>
+<li>Total ambient light $A = L_0+\sum_{lights}{(L_A*C_A)}$</li>
+<li>not care lightPos, viewPos, normals of surface</li>
+</ul>
+</li>
+<li>Diffuse Light<ul>
+<li>$L_D$ — light diffuse value</li>
+<li>$C_D$ — materials diffuse value</li>
+<li>$D$ — total diffuse light</li>
+<li>L — light vector</li>
+<li>N — normal vector</li>
+<li>$D=\sum_{lights}{L_D<em>C_D</em>(L\cdot N)}$</li>
+</ul>
+</li>
+<li>Specular Light<ul>
+<li>K — shininess of the surface — modeled by a cosine function $cos^k(\phi)$</li>
+<li>R — reflection direction of the light vector<ul>
+<li>$R = L-2(N(N\cdot L))$</li>
+</ul>
+</li>
+<li>$C_S$ — materials specular value</li>
+<li>$S = \sum_{lights}L_S<em>C_S</em>(V\cdot R)^K$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Use RGB color : $I = (I_R, I_G, I_B)$</li>
+<li>$I = A+D+S$</li>
+<li>prerequisite<ul>
+<li><strong>Normals</strong> for each vertex</li>
+<li><strong>Material</strong> for each object</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Light</p>
+<ul>
+<li>Light Properties<ul>
+<li>Types of Light Sources</li>
+<li>Position</li>
+<li>Directional</li>
+<li>Spotlight聚光灯 - direction and cutoff</li>
+<li>Attenuation衰减 - dropoff of values with distance</li>
+<li>Color for a Light Src in OpenGL</li>
+</ul>
+</li>
+<li>Types of Light<ul>
+<li>point lights</li>
+<li>directional/parallel lights</li>
+<li>spotlights</li>
+<li>ambient lights</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Shading</p>
+<ul>
+<li>Flat &amp; Smooth Shading (OpenGL provide)<ul>
+<li>Smooth shading interpolates vertex colors across the polygon</li>
+<li>Constant(Flat) Shading<ul>
+<li>Only calculate one point on a polygon(use surface normal) — result is assigned to all other pixels</li>
+<li>Efficient but often too coarse</li>
+</ul>
+</li>
+<li>Discrete Change of Shade<ul>
+<li>Mach band — a stripe found along the edge of two polygons of different shades — occur in constant shading</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Gouraud(Smooth) Shading<ul>
+<li>calculate shading for each vertex of a polygon with its Normal</li>
+<li>shades of other pixel covered by the polygon is obtained through interpolation</li>
+</ul>
+</li>
+<li>Phong shading:<ul>
+<li>interpolate the normals across a polygon</li>
+<li>compute the color for each pixel directly with local lighting model</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Computing Light in OpenGL</p>
+<ul>
+<li>Light$(L_R,L_G,L_B)$, Material$(M_R,M_G,M_B)$, then$(L_R<em>M_R,L_G</em>M_G,L_B*M_B)$</li>
+<li>Light$(R_1,G_1,B_1)$, Light$(R_2,G_2,B_2)$, then$(R_1<em>R_2,G_1</em>G_2,B_1*B_2)$</li>
+<li>For all values greater than 1 -&gt; clamped to 1</li>
+</ul>
+</li>
+<li><p>anisotropic shading各向异性</p>
+<ul>
+<li>deal with objects like hair and CD</li>
+</ul>
+</li>
+<li><p>Global Illumination</p>
+<ul>
+<li>also considers how light is reflected within a scene</li>
+<li>More complex and realistic</li>
+<li>Main algorithms:<ul>
+<li>Ray tracing<ul>
+<li>Great specular, approx diffuse</li>
+</ul>
+</li>
+<li>Radiosity<ul>
+<li>Great diffuse, ignore specular</li>
+</ul>
+</li>
+<li>Advanced hybrids: combine them</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="Chapter-6-Vertices-to-Fragments"><a href="#Chapter-6-Vertices-to-Fragments" class="headerlink" title="Chapter 6 Vertices to Fragments"></a>Chapter 6 Vertices to Fragments</h2><h3 id="Clipping-Algorithms"><a href="#Clipping-Algorithms" class="headerlink" title="Clipping Algorithms"></a>Clipping Algorithms</h3><h4 id="Line-Clipping-Algorithms"><a href="#Line-Clipping-Algorithms" class="headerlink" title="Line Clipping Algorithms"></a>Line Clipping Algorithms</h4><ul>
+<li>Cohen-Sutherland</li>
+<li>梁友栋-Barsky</li>
+</ul>
+<h5 id="1-Cohen-Sutherlan"><a href="#1-Cohen-Sutherlan" class="headerlink" title="1.Cohen-Sutherlan"></a>1.Cohen-Sutherlan</h5><ul>
+<li>Two Steps<ul>
+<li>Check if the line segment needs to be clipped</li>
+<li>Clip line segment</li>
+</ul>
+</li>
+<li>Cases<ul>
+<li>Case 1: Both endpoints of line segment inside all four lines<ul>
+<li><strong>Draw</strong></li>
+</ul>
+</li>
+<li>Case 2: Both endpoints outside all lines and on the same side of a line<ul>
+<li><strong>Discard</strong></li>
+</ul>
+</li>
+<li>Case 3: One endpoint inside, one outside<ul>
+<li>Must do at least one intersection</li>
+</ul>
+</li>
+<li>Case 4: Both outside<ul>
+<li>May have part inside</li>
+<li>Must do at least one intersection</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Using <strong>Outcodes</strong><ul>
+<li>such as 1001,1000,1010…</li>
+<li>Whether a bit is 1 or 0 depends on the relative position between the endpoint and four lines</li>
+<li>Case<ul>
+<li>outCode(A) = outCode(B) = 0 : Accept</li>
+<li>outCode(A) = 0 outCode(B) != 0<ul>
+<li>Location of 1 in the outCode(B) determines which edge to intersect with</li>
+<li>If there are two 1s, we might have to do two intersection</li>
+</ul>
+</li>
+<li>outCode(A) &amp; outCode(B) != 0 : reject</li>
+<li>Neither zero but logical AND yields zero<ul>
+<li>Shorten line segment by intersecting with one sides of window, and then compute outcode of intersection, reexecute algorithm</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-梁友栋-Barsky"><a href="#2-梁友栋-Barsky" class="headerlink" title="2.梁友栋-Barsky"></a>2.梁友栋-Barsky</h5><ul>
+<li>参数方程<ul>
+<li>$\begin{cases}<br>  x = x_1 + t<em>(x_2 - x_1)\\<br>  y = y_1 + t</em>(y_2 - y_1) &amp; 0&lt;=t&lt;=1<br>\end{cases}$</li>
+<li>Case ($x_2-x_1&gt;=0$) xL为始边, xR为终边</li>
+<li>Case ($y_2-y_1&gt;=0$) yB为始边, yT为终边</li>
+<li>Otherwise</li>
+<li>Compute $t_1^{‘}, t_1^{‘’}$, then $t_1=max{t_1^{‘}, t_1^{‘’}, 0}$</li>
+<li>$t_2=min{t_2^{‘}, t_2^{‘’}, 0}$</li>
+<li>Result<ul>
+<li>when $t_1&lt;t_2$, the line segment is visible</li>
+<li>when $t_1&gt;t_2$, the line segment is invisible</li>
+</ul>
+</li>
+<li>Process to compute $t_1,t_2$<ul>
+<li>$x_L &lt;= (x_2-x_1)*t + x_1 &lt;= xR$</li>
+<li>$yB &lt;= (y_2-y_1)*t + y_1 &lt;= yT$</li>
+<li>Simplify it into $t*p_k &lt;= q_k, k=1,2,3,4$</li>
+</ul>
+</li>
+<li>From the above, we get<ul>
+<li>$p_k&lt;0, t_k$为始边之交点参数</li>
+<li>$p_k&gt;0, t_k$为终边之交点参数</li>
+<li>$p_k=0 \text{ &amp;&amp; } q_k&lt;0, $则线段完全不可见</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Polygon-Fill-Area-Clipping"><a href="#Polygon-Fill-Area-Clipping" class="headerlink" title="Polygon Fill-Area Clipping"></a>Polygon Fill-Area Clipping</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for (window_line: window[1-4])&#123;</span><br><span class="line">    for(polygon_line: Polygon[1-n])&#123;</span><br><span class="line">        compute output vertex</span><br><span class="line">    &#125;</span><br><span class="line">    get a sequence of vertices</span><br><span class="line">&#125;</span><br><span class="line">get a final sequence of vertices</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Process<ul>
+<li>Output vertices that fall on the specific side of the line or intersect with that line</li>
+</ul>
+</li>
+</ul>
+<h3 id="Rasterization-Scan-Conversion"><a href="#Rasterization-Scan-Conversion" class="headerlink" title="Rasterization: Scan Conversion"></a>Rasterization: Scan Conversion</h3><ul>
+<li>Rasterization (scan conversion)<ul>
+<li>Determine which pixels that are inside primitive specified by a set of vertices</li>
+<li>Produces a set of fragments</li>
+<li>Fragments have a location(pixel location) and ohter attributes such color and texture coordinates that are determined by interpolating values at vertices</li>
+</ul>
+</li>
+<li><em>Pixel colors determined later using color, texture, normal and other vertex properties</em></li>
+</ul>
+<h4 id="DDA-Algorithm-—-Scan-conversion-for-line"><a href="#DDA-Algorithm-—-Scan-conversion-for-line" class="headerlink" title="DDA Algorithm — Scan conversion for line"></a>DDA Algorithm — Scan conversion for line</h4><p>DDA(Digital Differential Analyzer)</p>
+<ul>
+<li>Line equation: $y = m*x+b$</li>
+<li>Case<ul>
+<li>Case $|m|\le 1$<ul>
+<li>$x_1\lt x_2$ then $x_{i+1} = x_i + 1, y_{i+1} = y_i + m$</li>
+<li>$x_1\gt x_2$ then $x_{i+1} = x_i - 1, y_{i+1} = y_i - m$</li>
+</ul>
+</li>
+<li>Case $|m|\gt 1$<ul>
+<li>$y_1\lt y_2$ then $y_{i+1} = y_i + 1, x_{i+1} = x_i + 1/m$</li>
+<li>$y_1\gt y_2$ then $y_{i+1} = y_i - 1, x_{i+1} = x_i - 1/m$<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">line(int x1，int y1，int x2，int y2)</span><br><span class="line">&#123;</span><br><span class="line">    int length, i;</span><br><span class="line">    float dx, dy, x, y;</span><br><span class="line">    length &#x3D; abs(x2-x1); if(abs(y2-y1) &gt; length) &#x2F;&#x2F;m&gt;1</span><br><span class="line">    length &#x3D; abs(y2 - y1);</span><br><span class="line">    dx &#x3D;(float)(x2 – x1)&#x2F;length;</span><br><span class="line">    dy &#x3D;(float)(y2 – y1)&#x2F;length;</span><br><span class="line">    x &#x3D; x1 +0.5*sign(dx);</span><br><span class="line">    y &#x3D; y1 +0.5*sign(dy);</span><br><span class="line">    for(i&#x3D;1; i &lt;&#x3D; length; i++) &#123;</span><br><span class="line">        setpixel((int)x,(int)y); </span><br><span class="line">        x &#x3D; x + dx;</span><br><span class="line">        y &#x3D; y + dy;</span><br><span class="line">    &#125;&#x2F;* for *&#x2F;</span><br><span class="line">&#125;&#x2F;* line *&#x2F;</span><br></pre></td></tr></table></figure>
+<h4 id="Bresenham-Algorithm-—-Scan-conversion-for-line"><a href="#Bresenham-Algorithm-—-Scan-conversion-for-line" class="headerlink" title="Bresenham Algorithm — Scan conversion for line"></a>Bresenham Algorithm — Scan conversion for line</h4><img src="http://static.zybuluo.com/jyyzzj/d0lspc24wprvcb44w5lfuevy/image_1c2b8lleqbffm3o1o1io2069e9.png" alt="image_1c2b8lleqbffm3o1o1io2069e9.png-67.1kB"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Only discuss the situation when $0\lt |m| \le 1$ and $x_2 \gt x_1$</strong></p>
+<ul>
+<li>To decide $y_{i+1} = y_{i}+1 or y_{i+1} = y_i$, according to the distance of AB and the distance of BC</li>
+<li><p>let d1 = BC, d2 = AB</p>
+<ul>
+<li>if d1&gt;d2, get the upper point</li>
+<li>if d1&lt;d2, get the lower point</li>
+</ul>
+</li>
+<li><p>Something magic….</p>
+<ul>
+<li>$p_i = \Delta x*(d_1-d_2)=…$</li>
+<li>…After a lot of computation, we finally get</li>
+<li>$p_{i+1} = p_i + 2<em>\Delta y - 2</em>\Delta *(y_{i+1}-y_i)$</li>
+<li>Hence, at every step, we just compute the value of $p_i$ according to the previous value of p, and<ul>
+<li>if $p_i&gt;0 $ -&gt; $ d_1-d_2&gt;0$</li>
+<li>if $p_i<0 $ -> $ d_1-d_2&lt;0$</li>
+</ul>
+</li>
+<li>THe end<ul>
+<li>$p_1 = 2*\Delta y - \Delta x$</li>
+<li>$x_{i+1} = x_{i}+1$</li>
+<li>$y_{i+1} = \begin{cases} y_i+1&amp;\text{if } p_i&gt;0 \\ y_i &amp; \text{if } p_i\le0 \end{cases}$</li>
+<li>$p_{i+1} = \begin{cases} p_i+2<em>(\Delta y-\Delta x)&amp;\text{if } p_i&gt;0 \\ p_i+2</em>\Delta y &amp; \text{if } p_i\le0 \end{cases}$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Scan-Conversion-for-Polygon"><a href="#Scan-Conversion-for-Polygon" class="headerlink" title="Scan Conversion for Polygon"></a>Scan Conversion for Polygon</h4><pre><code>A **scan line** (also **scanline**) is one line, or row, in a raster scanning pattern, such as a line of video on a cathode ray tube (CRT) display of a television set or computer monitor
+</code></pre><ul>
+<li><p>Step</p>
+<ul>
+<li>First find out the scanlines that intercept with the polygon. Calculate the overlapping segments</li>
+<li>For each scanline from top to botton, set the pixels in the segment</li>
+</ul>
+</li>
+<li><p>Definition of <strong>Fragments</strong></p>
+<ul>
+<li>If there are exactly two edges that meet a scan line of pixels, we need to determine the color of all pixels between the two edge pixels on the scan line</li>
+<li><strong>These pixels</strong> are called of a <strong>fragment</strong></li>
+<li>Two steps:<ul>
+<li>求交</li>
+<li>排序 according to the x-coordinates</li>
+<li>if intersect with a vertex:<ul>
+<li>if it is a extreme point, then it counts 2 points</li>
+<li>else it counts 1 point</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Hidden-Surface-Removal"><a href="#Hidden-Surface-Removal" class="headerlink" title="Hidden-Surface Removal"></a>Hidden-Surface Removal</h4><ul>
+<li>The z-Buffer Algorithm<ul>
+<li><strong>Depth Buffer</strong> same as <strong>Frame Buffer</strong></li>
+<li>saving the distance of the closest intersection</li>
+</ul>
+</li>
+<li>The Painter’s Algorithm<ul>
+<li>Rendering from back to front of the polygons</li>
+<li>depth sort for all polygons</li>
+<li>dividing the polygon into two parts</li>
+</ul>
+</li>
+</ul>
+<h4 id="Antianliasing"><a href="#Antianliasing" class="headerlink" title="Antianliasing"></a>Antianliasing</h4><p>Compute the overlapping proportions of the lines and the nearby pixel squares.<br>Suppose that the overlapping proportion of a certain pixel is $\alpha$, the new pixel_color is then set to</p>
+<script type="math/tex; mode=display">\alpha \times currentColor + (1-\alpha) \times existingColor</script><ul>
+<li>Line Antianliasing</li>
+<li>Polygon Antianliasing</li>
+</ul>
+<h4 id="Color-Model"><a href="#Color-Model" class="headerlink" title="Color Model"></a>Color Model</h4><ul>
+<li><p>Color</p>
+<ul>
+<li>Hue(色调) or chroma</li>
+<li>Saturation(饱和度) 掺入白光的多少</li>
+<li>Luminance(明亮度) 光的能量大小</li>
+</ul>
+</li>
+<li><p>Color Model</p>
+<ul>
+<li>RGB — cube for screen<ul>
+<li>Luminance = 0.30<em>red + 0.59</em>green + 0.11*blue</li>
+</ul>
+</li>
+<li>CMYK — cube for printer</li>
+<li>HSV — cone(圆锥体) for artist<ul>
+<li>Hue = angle</li>
+<li>Saturation = radius</li>
+<li>Value = height</li>
+</ul>
+</li>
+<li>HLS — double cone for artist on painting</li>
+</ul>
+</li>
+</ul>
+<p>!!!Emissive vs Transmissive Color</p>
+<ul>
+<li><p>Emissive</p>
+<ul>
+<li>From screen</li>
+<li>RGB emissive model - additive colors</li>
+</ul>
+</li>
+<li><p>Transmissive</p>
+<ul>
+<li>From inks</li>
+<li>CMYK transmissive model - subtractive color<br><img src="http://static.zybuluo.com/jyyzzj/jctjt8tkjtp60q2usjcmlf7a/image_1c2bu8912krq17v029nasu1t3c9.png" alt="image_1c2bu8912krq17v029nasu1t3c9.png-69.6kB">  </li>
+</ul>
+</li>
+</ul>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Exam-Review/" rel="tag"># Exam Review</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/01/02/2018-01-02-Notes-For-IT-Project-Management/" rel="prev" title="Note for IT Project Management">
+      <i class="fa fa-chevron-left"></i> Note for IT Project Management
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/12/28/2017-12-28-Notes-For-Software-Achitecture/" rel="next" title="Notes for Software Achitecture">
+      Notes for Software Achitecture <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-i-when-i-lt-5"><span class="nav-number">1.</span> <span class="nav-text">Chapter i when i&lt;5</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#About-the-order-of-the-tranformation-matrices"><span class="nav-number">1.0.1.</span> <span class="nav-text">About the order of the tranformation matrices</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Collision-Detection-Algorithm"><span class="nav-number">1.0.2.</span> <span class="nav-text">Collision Detection Algorithm</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-5-Lighting-and-Shading"><span class="nav-number">2.</span> <span class="nav-text">Chapter 5 Lighting and Shading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-6-Vertices-to-Fragments"><span class="nav-number">3.</span> <span class="nav-text">Chapter 6 Vertices to Fragments</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Clipping-Algorithms"><span class="nav-number">3.1.</span> <span class="nav-text">Clipping Algorithms</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Line-Clipping-Algorithms"><span class="nav-number">3.1.1.</span> <span class="nav-text">Line Clipping Algorithms</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Cohen-Sutherlan"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">1.Cohen-Sutherlan</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E6%A2%81%E5%8F%8B%E6%A0%8B-Barsky"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">2.梁友栋-Barsky</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Polygon-Fill-Area-Clipping"><span class="nav-number">3.1.2.</span> <span class="nav-text">Polygon Fill-Area Clipping</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rasterization-Scan-Conversion"><span class="nav-number">3.2.</span> <span class="nav-text">Rasterization: Scan Conversion</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DDA-Algorithm-%E2%80%94-Scan-conversion-for-line"><span class="nav-number">3.2.1.</span> <span class="nav-text">DDA Algorithm — Scan conversion for line</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bresenham-Algorithm-%E2%80%94-Scan-conversion-for-line"><span class="nav-number">3.2.2.</span> <span class="nav-text">Bresenham Algorithm — Scan conversion for line</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scan-Conversion-for-Polygon"><span class="nav-number">3.2.3.</span> <span class="nav-text">Scan Conversion for Polygon</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hidden-Surface-Removal"><span class="nav-number">3.2.4.</span> <span class="nav-text">Hidden-Surface Removal</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Antianliasing"><span class="nav-number">3.2.5.</span> <span class="nav-text">Antianliasing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Color-Model"><span class="nav-number">3.2.6.</span> <span class="nav-text">Color Model</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/img/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Crysple" title="GitHub → https://github.com/Crysple" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:gdzejlin@gmail.com" title="E-Mail → mailto:gdzejlin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-Danny"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+  
+
+</body>
+</html>
