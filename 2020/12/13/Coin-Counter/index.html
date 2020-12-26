@@ -29,12 +29,12 @@
 <meta property="og:description" content="Take a photo of coins and get the total value of them">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/img/post_img/coin421.png">
-<meta property="og:image" content="http://yoursite.com/img/post_img/coinap.png">
 <meta property="og:image" content="http://yoursite.com/img/post_img/coinloss.png">
+<meta property="og:image" content="http://yoursite.com/img/post_img/coinap.png">
 <meta property="og:image" content="http://yoursite.com/img/post_img/coin421.png">
 <meta property="og:image" content="http://yoursite.com/img/post_img/coin431.png">
 <meta property="article:published_time" content="2020-12-13T21:29:20.000Z">
-<meta property="article:modified_time" content="2020-12-13T22:03:11.040Z">
+<meta property="article:modified_time" content="2020-12-26T14:27:11.217Z">
 <meta property="article:author" content="Daniel">
 <meta property="article:tag" content="Coding, Machine Learning">
 <meta name="twitter:card" content="summary">
@@ -191,10 +191,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-12-13 16:29:20 / Modified: 17:03:11" itemprop="dateCreated datePublished" datetime="2020-12-13T16:29:20-05:00">2020-12-13</time>
+              <time title="Created: 2020-12-13 16:29:20" itemprop="dateCreated datePublished" datetime="2020-12-13T16:29:20-05:00">2020-12-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-12-26 09:27:11" itemprop="dateModified" datetime="2020-12-26T09:27:11-05:00">2020-12-26</time>
+              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -288,9 +294,9 @@
 <pre><code>Done
 </code></pre><h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_img</span>(<span class="params">path</span>):</span></span><br><span class="line">    img = cv2.imread(path)</span><br><span class="line">    plt.figure(dpi=<span class="number">300</span>)</span><br><span class="line">    plt.imshow(img)</span><br></pre></td></tr></table></figure>
 <h4 id="Loss"><a href="#Loss" class="headerlink" title="Loss"></a>Loss</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show_img(<span class="string">&#x27;loss.png&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="/img/post_img/coinap.png" alt="audioModule"></p>
-<h4 id="Avg-Precision-amp-Avg-Recall"><a href="#Avg-Precision-amp-Avg-Recall" class="headerlink" title="Avg Precision &amp; Avg Recall"></a>Avg Precision &amp; Avg Recall</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show_img(<span class="string">&#x27;apac.png&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <p><img src="/img/post_img/coinloss.png" alt="audioModule"></p>
+<h4 id="Avg-Precision-amp-Avg-Recall"><a href="#Avg-Precision-amp-Avg-Recall" class="headerlink" title="Avg Precision &amp; Avg Recall"></a>Avg Precision &amp; Avg Recall</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show_img(<span class="string">&#x27;apac.png&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/img/post_img/coinap.png" alt="audioModule"></p>
 <h4 id="Model-Selection"><a href="#Model-Selection" class="headerlink" title="Model Selection"></a>Model Selection</h4><p>According to the figure by <code>tensorboard</code>, I selected <code>Yolov4_epoch411</code> as <strong>the final model</strong> and the result looks good.</p>
 <h2 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h2><p><strong>Global variables</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line">n_classes = <span class="number">6</span></span><br><span class="line">height = <span class="number">1280</span></span><br><span class="line">width = <span class="number">1280</span></span><br><span class="line">namesfile = <span class="string">&#x27;data/classes.txt&#x27;</span></span><br><span class="line">os.environ[<span class="string">&#x27;CUDA_VISIBLE_DEVICES&#x27;</span>] = <span class="string">&quot;0,1,2,3,4,5&quot;</span></span><br></pre></td></tr></table></figure>
