@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://crysple.github.io/img/post_img/agent-evolution-matryoshka.jpg">
 <meta property="og:image" content="https://crysple.github.io/img/post_img/enterprise-execution-gap.jpg">
 <meta property="article:published_time" content="2026-05-11T19:00:00.000Z">
-<meta property="article:modified_time" content="2026-05-11T07:46:22.096Z">
+<meta property="article:modified_time" content="2026-05-11T08:10:45.052Z">
 <meta property="article:author" content="Daniel">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="Engineering">
@@ -183,7 +183,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2026-05-11 12:00:00 / Modified: 00:46:22" itemprop="dateCreated datePublished" datetime="2026-05-11T12:00:00-07:00">2026-05-11</time>
+              <time title="Created: 2026-05-11 12:00:00 / Modified: 01:10:45" itemprop="dateCreated datePublished" datetime="2026-05-11T12:00:00-07:00">2026-05-11</time>
             </span>
 
           
@@ -202,10 +202,8 @@
 <span id="more"></span>
 
 <p>Two years ago I was on Copilot autocomplete. A year ago I switched to Cursor. The last six months it’s been Claude Code. Most of my friends followed the same path.</p>
-<p>Every one of us would tell you the tools are good. Autocomplete is sharp. A prototype goes from idea to running in a night. Even hairy modules get drafted by the agent in one pass.</p>
-<p>And every one of us is still very busy everyday. Sprint deadlines still slip. After a few retros I had to admit the obvious: this wasn’t a tool problem. It was a workflow problem.</p>
-<p>In July 2025 METR published the cleanest study I’ve seen on this. 16 senior open-source maintainers, 246 real issues, randomized assignment of AI tools. Developers who used AI were <strong>19% slower</strong> at the work. They had predicted they’d be 24% faster. After the work was done, they still believed they’d been 20% faster. A forty-point gap between perception and reality.</p>
-<p>Stack Overflow’s 2025 survey has a line I’ve quoted at people a dozen times: <em>the most-acknowledged impact is on individual productivity, not team productivity.</em> Personal wins. Team flat.</p>
+<p>Every one of us would tell you the tools are good. Autocomplete is sharp. A prototype goes from idea to running in an hour. Even hairy modules get drafted by the agent in one pass.</p>
+<p>And every one of us is still extremely busy everyday.. After a few retros I had to admit the obvious: this wasn’t a tool problem. It was a workflow problem.</p>
 <p>AI writes a full prototype in a night. Cursor can complete an entire module from a function signature. Then what exactly is it making faster?</p>
 <h2 id="Writing-code-is-the-easiest-part-of-the-workflow"><a href="#Writing-code-is-the-easiest-part-of-the-workflow" class="headerlink" title="Writing code is the easiest part of the workflow"></a>Writing code is the easiest part of the workflow</h2><p>The misconception I had to break first: <em>AI is faster at writing code</em> is not the same statement as <em>AI is faster at engineering</em>.</p>
 <p>AI is genuinely good at code now. Last week I asked Claude Code to support exporting Torch Package in a ML training library. Ten minutes for something that would have taken me two hours, unit tests included. Design isn’t bad either. Hand it a PRD and it’ll push back on edge cases and compatibility issues I would’ve missed in a first pass.</p>
@@ -218,7 +216,7 @@
 <p>I’ve started calling this capability <strong>enterprise execution</strong>: the ability to navigate the complex infra of a real company — its platforms, tools, wikis, and processes.</p>
 <p><img src="/img/post_img/ai-productivity-faucet.jpg"></p>
 <p>Once you see it, it’s obvious. AI accelerates the writing-code stage. That stage is the thinnest slice of the actual workday. <strong>Enterprise execution</strong> is the real bottleneck, and AI’s coverage there is close to zero. METR’s forty-point gap is not a mystery; it’s the perceptual error of mistaking <em>coding feels fast</em> for <em>the whole workflow is fast</em>.</p>
-<h2 id="The-whole-industry-has-been-pushing-LLMs-through-the-rest-of-the-workflow"><a href="#The-whole-industry-has-been-pushing-LLMs-through-the-rest-of-the-workflow" class="headerlink" title="The whole industry has been pushing LLMs through the rest of the workflow"></a>The whole industry has been pushing LLMs through the rest of the workflow</h2><p>Many people are dismissive about every new Anthropic concept that shipped in the past 2 years. Prompt Engineering. MCP. Agent Skills. Plugin. Hooks. Harness. The standard reaction is some version of “this is markdown reskinned.” On Twitter the dunks come in waves: “thin wrappers around subtasks,” “MCP feels like wearing diapers,” Y Combinator’s Garry Tan saying his 30-minute CLI wrapper outperforms MCP by 100x.</p>
+<h2 id="The-whole-industry-has-been-pushing-LLMs-through-the-rest-of-the-workflow"><a href="#The-whole-industry-has-been-pushing-LLMs-through-the-rest-of-the-workflow" class="headerlink" title="The whole industry has been pushing LLMs through the rest of the workflow"></a>The whole industry has been pushing LLMs through the rest of the workflow</h2><p>Many people are dismissive about every new Anthropic concept that shipped in the past 2 years. Prompt Engineering. MCP. Agent Skills. Plugin. Hooks. Harness. The standard reaction is some version of “<strong>this is markdown reskinned.</strong>“ On Twitter the dunks come in waves: “thin wrappers around subtasks,” “MCP feels like wearing diapers”.</p>
 <p>I held that view for a while too.</p>
 <p>Then writing the previous section made me see what the dismissive view misses. There’s a clear through-line. From prompt to harness, every supposedly markdown-packaged concept is closing a specific gap in the workflow. Every step pushes the LLM further out from being a code-writing assistant into being a worker.</p>
 <p>Let me string the line up.</p>
@@ -281,7 +279,7 @@
 <p>Next time someone tells you “AI just makes code a little faster, what’s the big deal,” you can tell them they’re measuring wrong. The first question is how far the workflow runs end to end. Then ask where the AI is.</p>
 <p><strong>Your won’t get your hours back from the next model. You’ll get them back from the next generation of workflow engineering.</strong></p>
 <hr>
-<p>So how do you build that workflow engineering? How do you keep a single agent on rails for 20 hours? How do you get multiple agents to collaborate without burning each other’s tokens? How do you make cross-session memory more than a RAG toy? How do you make a large company’s internal infra agent-ready in the first place? Those are the problems I’ve been trying to solve. The experiment is called <strong>Superteam</strong>: a stack stitching together PM-style brainstorm, shell hard-gates, multi-agent pairing, tmux long-running sessions, and a local wiki. Next post will share my experience of replacing myself.</p>
+<p>So how do you build that workflow engineering? How do you keep a single agent on rails for 20 hours? How do you get multiple agents to collaborate seamlessly? How do you make your agent self-learning tribal knowledge from your company and memorize them? How do you make your agent working in a large company whose internal infra is not that AI-ready? In a nutshell, how do I make myself less busier? Those are the problems I’ve been trying to solve. I’ve been doing an experiment <strong>Superteam</strong>: a stack stitching together PM-style brainstorm, shell hard-gates, multi-agent pairing, tmux long-running sessions, and a local wiki. Next post will share my experience of replacing myself.</p>
 
     </div>
 
