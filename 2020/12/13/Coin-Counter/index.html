@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"crysple.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Take a photo of coins and get the total value of them">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Smart Coin Counting System">
+<meta property="og:url" content="https://crysple.github.io/2020/12/13/Coin-Counter/index.html">
+<meta property="og:site_name" content="Danny&#39;s little home">
+<meta property="og:description" content="Take a photo of coins and get the total value of them">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://crysple.github.io/img/post_img/coin421.png">
+<meta property="article:published_time" content="2020-12-13T20:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-06T17:09:31.230Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Machine Learning">
+<meta property="article:tag" content="Project">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crysple.github.io/img/post_img/coin421.png">
+
+<link rel="canonical" href="https://crysple.github.io/2020/12/13/Coin-Counter/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Smart Coin Counting System | Danny's little home</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Danny's little home</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">异国漂泊，野蛮生长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://crysple.github.io/2020/12/13/Coin-Counter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Daniel">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Danny's little home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Smart Coin Counting System
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-12-13 12:00:00" itemprop="dateCreated datePublished" datetime="2020-12-13T12:00:00-08:00">2020-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-05-06 10:09:31" itemprop="dateModified" datetime="2026-05-06T10:09:31-07:00">2026-05-06</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>Take a photo of coins and get the total value of them</strong></p>
+<p><img src="/img/post_img/coin421.png" alt="audioModule"></p>
+<span id="more"></span>
+
+<p>Author/Partipatant: Zejun Lin</p>
+<p>Contributions:</p>
+<ul>
+<li>Collect dataset</li>
+<li>Code in this Notebook</li>
+<li>With a slide for presentation</li>
+</ul>
+<p>Links:</p>
+<ul>
+<li>Dataset: <a target="_blank" rel="noopener" href="https://drive.google.com/file/d/1oiifbiPnHtTpn20PShbPrFe_JV9oDGPK/view?usp=sharing">https://drive.google.com/file/d/1oiifbiPnHtTpn20PShbPrFe_JV9oDGPK/view?usp=sharing</a></li>
+<li>Yolov4 code: <a target="_blank" rel="noopener" href="https://github.com/Tianxiaomo/pytorch-YOLOv4">https://github.com/Tianxiaomo/pytorch-YOLOv4</a></li>
+<li>PyTorch Weight File: <a target="_blank" rel="noopener" href="https://drive.google.com/file/d/110o6tbu15qYIhNMhBQU_Qtefn02j9HDR/view?usp=sharing">https://drive.google.com/file/d/110o6tbu15qYIhNMhBQU_Qtefn02j9HDR/view?usp=sharing</a></li>
+<li>Presentation: <a target="_blank" rel="noopener" href="https://drive.google.com/file/d/1vu0oqGmp6soOwozjmMCW26c8P2cdreSk/view?usp=sharing">https://drive.google.com/file/d/1vu0oqGmp6soOwozjmMCW26c8P2cdreSk/view?usp=sharing</a></li>
+</ul>
+<hr>
+<h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><h3 id="What-it-is"><a href="#What-it-is" class="headerlink" title="What it is"></a>What it is</h3><p>When I first came to the US, I found it really difficult to <strong>count coins</strong> because there are many types of them and it is <strong>difficult to identify</strong> those tiny things just by their <strong>similar appearance</strong>.</p>
+<p>Therefore, given the opportunity, I decide to develop an intelligent system that can tell people the <strong>total value</strong> of a bunch of coins just by <strong>taking a photo</strong>.</p>
+<hr>
+<h2 id="Deep-Learning-Model"><a href="#Deep-Learning-Model" class="headerlink" title="Deep Learning Model"></a>Deep Learning Model</h2><h3 id="Yolov4-—-PyTorch-version"><a href="#Yolov4-—-PyTorch-version" class="headerlink" title="Yolov4 — PyTorch version"></a>Yolov4 — PyTorch version</h3><p>I decide to try <strong>Yolov4</strong> first, which is the SOTA model for <strong>object detection</strong>. I treat each kind of coin as a class of object. Then given an image, I try to find all different kinds of coins by the model, then apply postprocessing like <strong>NMS</strong> to get the result. Finally, but counting the number of different class of objects in the images, I can multiple them with denominations of different kinds of coins and get the total value.</p>
+<p>Yolo is the abbreviation of <strong>You Only Look Once</strong>, used for Unified, Real-Time Object Detection. It frames object detection as a regression problem to spatially separated bounding boxes and associated class probabilities. A single neural network predicts bounding boxes and class probabilities directly from full images in one evaluation. Since the whole detection pipeline is a single network, it can be optimized end-to-end directly on detection performance.</p>
+<p>More information of Yolo please refer to <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1506.02640">https://arxiv.org/abs/1506.02640</a></p>
+<p>I choose one of the PyTorch implementation on Github: <a target="_blank" rel="noopener" href="https://github.com/Tianxiaomo/pytorch-YOLOv4">https://github.com/Tianxiaomo/pytorch-YOLOv4</a></p>
+<h3 id="Hyper-parameter"><a href="#Hyper-parameter" class="headerlink" title="Hyper parameter"></a>Hyper parameter</h3><p>After trying repeatedly, I found that…</p>
+<ul>
+<li>Batch size should be small — I tried 32/16/8, etc. but not work — loss didn’t decrease<br>Finally I decided to use 4 as the batch size</li>
+</ul>
+<ul>
+<li>Should optimize according to global step, so I set <code>subdivision</code> as 1</li>
+<li>Others:<br>max_batches: 10000</li>
+<li>steps: [8000, 9000]</li>
+<li>width == height == 800<br>Too large — out of memory</li>
+<li>Too small — underfit</li>
+</ul>
+<ul>
+<li>lr: 0.001<br>This is fine as I use adam as optimize with a scheduler</li>
+</ul>
+<ul>
+<li>epoch: 600</li>
+</ul>
+<hr>
+<h2 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h2><h3 id="Dataset"><a href="#Dataset" class="headerlink" title="Dataset"></a>Dataset</h3><h4 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h4><p>I cannot find any coins dataset for object detection online. But I did find some pictures of coins. I also have some coins myself which I can take some photos of. So I will first utilize these photos, maybe do some transformation of them to get more raw data. Then I know there is some tools online for me to label them manually. The label for object detection is usually like:</p>
+<ul>
+<li>x1, y1, x2, y2, class_id</li>
+</ul>
+<p>where, x1, y1, x2, y2 represents a bounding box.<br>Usually a input image has some bounding-box labels like this. By using the tool I can label the data.</p>
+<p>For the test set, it’s pretty easy, that I just need to count coins with weight as their denominations and get the total value. A possible evalution method would be the accuracy.</p>
+<h4 id="Preprocessing"><a href="#Preprocessing" class="headerlink" title="Preprocessing"></a>Preprocessing</h4><ul>
+<li>I use a tool called <strong>labelImg</strong>, which can be install by <code>python3 -m pip install labelImg</code>.</li>
+<li>However, the output format is like (x_mid, y_mid, width, height class_id) (dtype = float as the % of width &amp; height)</li>
+<li>So two preprocessing should be done:<br>Transform to (x_min, y_min, x_max, y_max, class_id)</li>
+<li>Transform the unit from percentage to actual pixel</li>
+</ul>
+<ul>
+<li>Another one is that because I use IPhone to take these pictures and move to OS X by airdrop, the format of them is <code>HEIC</code>, that I need to convert to <code>jpg</code>.</li>
+</ul>
+<h4 id="Download"><a href="#Download" class="headerlink" title="Download"></a>Download</h4><p>Available on <a target="_blank" rel="noopener" href="https://drive.google.com/file/d/1oiifbiPnHtTpn20PShbPrFe_JV9oDGPK/view?usp=sharing">https://drive.google.com/file/d/1oiifbiPnHtTpn20PShbPrFe_JV9oDGPK/view?usp=sharing</a></p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>import os<br>def mmwh2xyxy(root):<br>    “””From x_mid, ymid, width, height<br>        to  x_min, y_min, x_max, y_max<br>    “””<br>    for fname in os.listdir(root):<br>        base, *_, ext = fname.split(‘.’)<br>        if ext != ‘txt’ or base == ‘classes’:<br>            continue<br>        res = []<br>        with open(os.path.join(root, fname), ‘r’) as f:<br>            for line in f:<br>                if len(line) &lt; 5:<br>                    continue<br>                c, xm, ym, w, h = map(float, line.split())<br>                bbox = [xm-w/2, ym-h/2, xm+w/2, ym+h/2]<br>                res += “&#123;&#125; &#123;&#125; &#123;&#125; &#123;&#125; &#123;&#125;”.format(int(c), *map(lambda x:round(x, 6), bbox)),<br>        with open(os.path.join(root, fname), ‘w’) as f:<br>            f.write(‘\n’.join(res))</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>from wand.image import Image<br>def heic2jpeg(root):<br>    for fname in os.listdir(root):<br>        *_, ext = fname.split(‘.’)<br>        if ext != ‘HEIC’:<br>            continue<br>        fpath = os.path.join(root, fname)<br>        img=Image(filename=fpath)<br>        img.format=’jpg’<br>        img.save(filename=fpath[:-4]+’jpeg’)<br>        img.close()<br>        os.remove(fpath)</p>
+<p>1<br>2<br>root = “/Users/danny/Desktop/coins”<br>heic2jpeg(root)</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>import cv2<br>import os<br>def convert2yolo_format(root):<br>    res = []<br>    for fname in os.listdir(root):<br>        base, ext = fname.split(‘.’)<br>        if ext != ‘txt’ or base == ‘classes’:<br>            continue</p>
+<pre><code>    with open(os.path.join(root, fname), &#39;r&#39;) as f:
+        cur = [base+&#39;.jpg&#39;]
+        if base == &#39;train&#39;: continue
+        img = cv2.imread(os.path.join(root, cur[0]))
+        height, width, _ = img.shape
+        for line in f:
+            if len(line) &lt; 5:
+                continue
+            xmin, ymin, xmax, ymax = map(float, line.split()[1:])
+            c = int(line.split()[0])
+            if c == 5:
+                c -= 1 #skip error class name -- &#39;classes&#39;
+            cur += &quot;&amp;#123;&amp;#125;,&amp;#123;&amp;#125;,&amp;#123;&amp;#125;,&amp;#123;&amp;#125;,&amp;#123;&amp;#125;&quot;.format(int(xmin*width), int(ymin*height), int(xmax*width), int(ymax*height), c),
+    res += &#39; &#39;.join(cur),
+with open(os.path.join(root, &#39;train.txt&#39;), &#39;w&#39;) as f:
+    f.write(&#39;\n&#39;.join(res))
+print(&#39;Done&#39;)
+</code></pre>
+<p>1<br>convert2yolo_format(root)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Done</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><p>1<br>2<br>3<br>4<br>5<br>from matplotlib import pyplot as plt<br>def show_img(path):<br>    img = cv2.imread(path)<br>    plt.figure(dpi=300)<br>    plt.imshow(img)</p>
+<h4 id="Loss"><a href="#Loss" class="headerlink" title="Loss"></a>Loss</h4><p>1<br>show_img(‘loss.png’)</p>
+<h4 id="Avg-Precision-amp-Avg-Recall"><a href="#Avg-Precision-amp-Avg-Recall" class="headerlink" title="Avg Precision &amp; Avg Recall"></a>Avg Precision &amp; Avg Recall</h4><p>1<br>show_img(‘apac.png’)</p>
+<h4 id="Model-Selection"><a href="#Model-Selection" class="headerlink" title="Model Selection"></a>Model Selection</h4><p>According to the figure by <code>tensorboard</code>, I selected <code>Yolov4_epoch411</code> as <strong>the final model</strong> and the result looks good.</p>
+<h2 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h2><p><strong>Global variables</strong></p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>import os<br>import cv2<br>n_classes = 6<br>height = 1280<br>width = 1280<br>namesfile = ‘data/classes.txt’<br>os.environ[‘CUDA_VISIBLE_DEVICES’] = “0,1,2,3,4,5”</p>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>%matplotlib inline<br>from matplotlib import pyplot as plt<br>def plot_boxes_cv2(img, boxes, savename=None, class_names=None, color=None):<br>    “””Plot bbox on the images”””<br>    img = np.copy(img)<br>    colors = np.array([[1, 0, 1], [0, 0, 1], [0, 1, 1], [0, 1, 0], [1, 1, 0], [1, 0, 0]], dtype=np.float32)</p>
+<pre><code>def get_color(c, x, max_val):
+    ratio = float(x) / max_val * 5
+    i = int(math.floor(ratio))
+    j = int(math.ceil(ratio))
+    ratio = ratio - i
+    r = (1 - ratio) * colors[i][c] + ratio * colors[j][c]
+    return int(r * 255)
+
+width = img.shape[1]
+height = img.shape[0]
+for i in range(len(boxes)):
+    box = boxes[i]
+    x1 = int(box[0] * width)
+    y1 = int(box[1] * height)
+    x2 = int(box[2] * width)
+    y2 = int(box[3] * height)
+
+    if color:
+        rgb = color
+    else:
+        rgb = (255, 0, 0)
+    if len(box) &gt;= 7 and class_names:
+        cls_conf = box[5]
+        cls_id = box[6]
+</code></pre>
+<h1 id="print-‘-s-f’-class-names-cls-id-cls-conf"><a href="#print-‘-s-f’-class-names-cls-id-cls-conf" class="headerlink" title="print(‘%s: %f’ % (class_names[cls_id], cls_conf))"></a>print(‘%s: %f’ % (class_names[cls_id], cls_conf))</h1><pre><code>        classes = len(class_names)
+        offset = cls_id * 123457 % classes
+        red = get_color(2, offset, classes)
+        green = get_color(1, offset, classes)
+        blue = get_color(0, offset, classes)
+        if color is None:
+            rgb = (red, green, blue)
+        img = cv2.putText(img, class_names[cls_id], (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 5, rgb, 10)
+    img = cv2.rectangle(img, (x1, y1), (x2, y2), rgb, 10)
+from copy import deepcopy
+img = deepcopy(img)
+if savename:
+    cv2.imwrite(savename, img)
+else:
+    plt.imshow(img)
+return img
+</code></pre>
+<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>from models import *<br>import torch<br>import subprocess<br>def load_class_names(namefile):<br>    class_names = []<br>    with open(namesfile, ‘r’) as fp:<br>        lines = fp.readlines()<br>    for line in lines:<br>        class_names += line.rstrip(),<br>    return class_names</p>
+<p>def load_model(weight_file):<br>    model = Yolov4(yolov4conv137weight=None, n_classes=n_classes, inference=True)</p>
+<pre><code>if torch.cuda.device_count() &gt; 0:
+    model = torch.nn.DataParallel(model)
+pretrained_dict = torch.load(weight_file, map_location=torch.device(&#39;cuda&#39;))
+model.load_state_dict(pretrained_dict)
+return model
+</code></pre>
+<p>def count_and_plot(img_file, model):<br>    “””<br>    Count the total value of coins in the image,<br>    and plot the predicted image with bounding box”””<br>    img = cv2.imread(img_file)<br>    # Inference input size is not necessarily be the training input size<br>    # Optional inference sizes:<br>    #   Hight in &#123;320, 416, 512, 608, … 320 + 96 * n&#125;<br>    #   Width in &#123;320, 416, 512, 608, … 320 + 96 * m&#125;<br>    sized = cv2.resize(img, (width, height))<br>    sized = cv2.cvtColor(sized, cv2.COLOR_BGR2RGB)<br>    boxes = do_detect(model, sized, 0.4, 0.6, True)<br>    class_names = load_class_names(namesfile)<br>    tmpfile = “/tmp/prediction.jpeg”<br>    plot_boxes_cv2(img, boxes[0], savename=tmpfile, class_names=class_names)<br>    import matplotlib.pyplot as plt<br>    import matplotlib.image as mpimg<br>    img = mpimg.imread(tmpfile)<br>    plt.figure(dpi=800)<br>    plt.imshow(img)<br>    print_bbox_info(boxes, class_names)</p>
+<p>def print_bbox_info(boxes, class_names):<br>    from collections import Counter<br>    cnt = Counter()<br>    for box in boxes[0]:<br>        cls_id = box[6]<br>        cls_name = class_names[cls_id]<br>        cnt[int(cls_name)] += 1<br>    total = 0<br>    print(“There are:”)<br>    for coin, n in cnt.items():<br>        print(“&#123;&#125; &#123;&#125; cent(s) coins;”.format(n, coin))<br>        total += n * coin<br>    print(“Totally: &#123;&#125; cents”.format(total))</p>
+<p>1<br>2<br>weight_file = “Yolov4_epoch411.pth”<br>model = load_model(weight_file)</p>
+<h4 id="Predict-Plot-BBox-amp-Get-total-values"><a href="#Predict-Plot-BBox-amp-Get-total-values" class="headerlink" title="Predict, Plot BBox &amp; Get total values"></a>Predict, Plot BBox &amp; Get total values</h4><p>1<br>count_and_plot(“data/imgs/IMG_4755.jpeg”, model)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-----------------------------------</span><br><span class="line">           Preprocess : 0.045525</span><br><span class="line">      Model Inference : 0.234886</span><br><span class="line">-----------------------------------</span><br><span class="line">-----------------------------------</span><br><span class="line">       max and argmax : 0.011173</span><br><span class="line">                  nms : 0.002164</span><br><span class="line">Post processing total : 0.013337</span><br><span class="line">-----------------------------------</span><br><span class="line">There are:</span><br><span class="line">3 25 cent(s) coins;</span><br><span class="line">1 5 cent(s) coins;</span><br><span class="line">1 100 cent(s) coins;</span><br><span class="line">2 1 cent(s) coins;</span><br><span class="line">3 10 cent(s) coins;</span><br><span class="line">Totally: 212 cents</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>1<br>count_and_plot(“data/imgs/IMG_4766.jpeg”, model)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-----------------------------------</span><br><span class="line">           Preprocess : 0.024374</span><br><span class="line">      Model Inference : 0.094530</span><br><span class="line">-----------------------------------</span><br><span class="line">-----------------------------------</span><br><span class="line">       max and argmax : 0.008022</span><br><span class="line">                  nms : 0.001669</span><br><span class="line">Post processing total : 0.009692</span><br><span class="line">-----------------------------------</span><br><span class="line">There are:</span><br><span class="line">3 25 cent(s) coins;</span><br><span class="line">1 5 cent(s) coins;</span><br><span class="line">1 100 cent(s) coins;</span><br><span class="line">3 1 cent(s) coins;</span><br><span class="line">3 10 cent(s) coins;</span><br><span class="line">Totally: 213 cents</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Some-problems-I-came-across"><a href="#Some-problems-I-came-across" class="headerlink" title="Some problems I came across"></a>Some problems I came across</h2><ul>
+<li>Library used by Python Kernel is not the same as the one in shell, which cause <code>load_weight</code> fail.</li>
+<li>Cannot use cv2.imshow &amp; cv2.retangle on remote Jupyter notebook due to QT module missing.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
+              <a href="/tags/Project/" rel="tag"># Project</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/28/Internship-Experience-At-Baidu-USA/" rel="prev" title="Internship Experience at Baidu USA">
+      <i class="fa fa-chevron-left"></i> Internship Experience at Baidu USA
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/02/27/life2021Spring/" rel="next" title="Into My Own">
+      Into My Own <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Description"><span class="nav-number">1.</span> <span class="nav-text">Description</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#What-it-is"><span class="nav-number">1.1.</span> <span class="nav-text">What it is</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deep-Learning-Model"><span class="nav-number">2.</span> <span class="nav-text">Deep Learning Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Yolov4-%E2%80%94-PyTorch-version"><span class="nav-number">2.1.</span> <span class="nav-text">Yolov4 — PyTorch version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hyper-parameter"><span class="nav-number">2.2.</span> <span class="nav-text">Hyper parameter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experiment"><span class="nav-number">3.</span> <span class="nav-text">Experiment</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dataset"><span class="nav-number">3.1.</span> <span class="nav-text">Dataset</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Overview"><span class="nav-number">3.1.1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Preprocessing"><span class="nav-number">3.1.2.</span> <span class="nav-text">Preprocessing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Download"><span class="nav-number">3.1.3.</span> <span class="nav-text">Download</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Training"><span class="nav-number">4.</span> <span class="nav-text">Training</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Loss"><span class="nav-number">4.0.1.</span> <span class="nav-text">Loss</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Avg-Precision-amp-Avg-Recall"><span class="nav-number">4.0.2.</span> <span class="nav-text">Avg Precision &amp; Avg Recall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Model-Selection"><span class="nav-number">4.0.3.</span> <span class="nav-text">Model Selection</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inference"><span class="nav-number">5.</span> <span class="nav-text">Inference</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#print-%E2%80%98-s-f%E2%80%99-class-names-cls-id-cls-conf"><span class="nav-number"></span> <span class="nav-text">print(‘%s: %f’ % (class_names[cls_id], cls_conf))</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Predict-Plot-BBox-amp-Get-total-values"><span class="nav-number">0.0.1.</span> <span class="nav-text">Predict, Plot BBox &amp; Get total values</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Some-problems-I-came-across"><span class="nav-number">1.</span> <span class="nav-text">Some problems I came across</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

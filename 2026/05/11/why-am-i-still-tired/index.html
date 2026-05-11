@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"crysple.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Writing code was always the easiest part of the job.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="With AI, Why Am I Still This Busy?">
+<meta property="og:url" content="https://crysple.github.io/2026/05/11/why-am-i-still-tired/index.html">
+<meta property="og:site_name" content="Danny&#39;s little home">
+<meta property="og:description" content="Writing code was always the easiest part of the job.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://crysple.github.io/img/post_img/ai-does-30-percent.jpg">
+<meta property="og:image" content="https://crysple.github.io/img/post_img/ai-productivity-faucet.jpg">
+<meta property="og:image" content="https://crysple.github.io/img/post_img/agent-evolution-matryoshka.jpg">
+<meta property="og:image" content="https://crysple.github.io/img/post_img/enterprise-execution-gap.jpg">
+<meta property="article:published_time" content="2026-05-11T19:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-11T07:46:22.096Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Engineering">
+<meta property="article:tag" content="Productivity">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crysple.github.io/img/post_img/ai-does-30-percent.jpg">
+
+<link rel="canonical" href="https://crysple.github.io/2026/05/11/why-am-i-still-tired/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>With AI, Why Am I Still This Busy? | Danny's little home</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Danny's little home</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">异国漂泊，野蛮生长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://crysple.github.io/2026/05/11/why-am-i-still-tired/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Daniel">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Danny's little home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          With AI, Why Am I Still This Busy?
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2026-05-11 12:00:00 / Modified: 00:46:22" itemprop="dateCreated datePublished" datetime="2026-05-11T12:00:00-07:00">2026-05-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="/img/post_img/ai-does-30-percent.jpg"></p>
+<p><em>Writing code was always the easiest part of the job.</em></p>
+<span id="more"></span>
+
+<p>Two years ago I was on Copilot autocomplete. A year ago I switched to Cursor. The last six months it’s been Claude Code. Most of my friends followed the same path.</p>
+<p>Every one of us would tell you the tools are good. Autocomplete is sharp. A prototype goes from idea to running in a night. Even hairy modules get drafted by the agent in one pass.</p>
+<p>And every one of us is still very busy everyday. Sprint deadlines still slip. After a few retros I had to admit the obvious: this wasn’t a tool problem. It was a workflow problem.</p>
+<p>In July 2025 METR published the cleanest study I’ve seen on this. 16 senior open-source maintainers, 246 real issues, randomized assignment of AI tools. Developers who used AI were <strong>19% slower</strong> at the work. They had predicted they’d be 24% faster. After the work was done, they still believed they’d been 20% faster. A forty-point gap between perception and reality.</p>
+<p>Stack Overflow’s 2025 survey has a line I’ve quoted at people a dozen times: <em>the most-acknowledged impact is on individual productivity, not team productivity.</em> Personal wins. Team flat.</p>
+<p>AI writes a full prototype in a night. Cursor can complete an entire module from a function signature. Then what exactly is it making faster?</p>
+<h2 id="Writing-code-is-the-easiest-part-of-the-workflow"><a href="#Writing-code-is-the-easiest-part-of-the-workflow" class="headerlink" title="Writing code is the easiest part of the workflow"></a>Writing code is the easiest part of the workflow</h2><p>The misconception I had to break first: <em>AI is faster at writing code</em> is not the same statement as <em>AI is faster at engineering</em>.</p>
+<p>AI is genuinely good at code now. Last week I asked Claude Code to support exporting Torch Package in a ML training library. Ten minutes for something that would have taken me two hours, unit tests included. Design isn’t bad either. Hand it a PRD and it’ll push back on edge cases and compatibility issues I would’ve missed in a first pass.</p>
+<p>But code and design are not what fills my day.</p>
+<p>Honest time breakdown for one normal week: about 30% writing or modifying code. About 15% in meetings, scoping, writing docs. The other <strong>55% is wrestling with internal infra</strong>.</p>
+<p>That 55% looks like this. Design phase: digging through internal wiki for how a neighboring team handled a similar ranking problem three years ago. Scrolling Slack for the RCA from last quarter’s outage. Hunting through Confluence for the on-call runbook for some upstream service. Context is scattered across roughly seven internal tools and no agent can search across them.</p>
+<p>After the code is written, the rest is heavier. Running e2e tests in the stage environment because they refuse to run locally on a poor Mac without GPU. Hitting prod with a sample query through Bastion plus a temporary SSO to confirm an assumption. Submitting a model to the H100 cluster, watching the metrics 40 minutes later, finding AUC short of target, going back to feature engineering, resubmitting, waiting another 40. Fighting a build system written in 2018, six flags, none of them obviously named. Watching P99 on a deploy canary’s monitoring dashboard for an hour. On-call: PagerDuty fires, log trawl, figuring out which upstream service changed a contract.</p>
+<p>Every single one of these steps depends on an internal platform, tool, or wiki. And most of those environments are not AI-aware. Cursor cannot read my monitoring dashboard. Claude Code does not know how our internal deploy tool works. An agent that wants to submit an ML training job first has to learn an internal CLI whose own documentation isn’t AI-readable.</p>
+<p>So every step either gets done by hand, or I burn human cycles feeding context to the AI.</p>
+<p>I’ve started calling this capability <strong>enterprise execution</strong>: the ability to navigate the complex infra of a real company — its platforms, tools, wikis, and processes.</p>
+<p><img src="/img/post_img/ai-productivity-faucet.jpg"></p>
+<p>Once you see it, it’s obvious. AI accelerates the writing-code stage. That stage is the thinnest slice of the actual workday. <strong>Enterprise execution</strong> is the real bottleneck, and AI’s coverage there is close to zero. METR’s forty-point gap is not a mystery; it’s the perceptual error of mistaking <em>coding feels fast</em> for <em>the whole workflow is fast</em>.</p>
+<h2 id="The-whole-industry-has-been-pushing-LLMs-through-the-rest-of-the-workflow"><a href="#The-whole-industry-has-been-pushing-LLMs-through-the-rest-of-the-workflow" class="headerlink" title="The whole industry has been pushing LLMs through the rest of the workflow"></a>The whole industry has been pushing LLMs through the rest of the workflow</h2><p>Many people are dismissive about every new Anthropic concept that shipped in the past 2 years. Prompt Engineering. MCP. Agent Skills. Plugin. Hooks. Harness. The standard reaction is some version of “this is markdown reskinned.” On Twitter the dunks come in waves: “thin wrappers around subtasks,” “MCP feels like wearing diapers,” Y Combinator’s Garry Tan saying his 30-minute CLI wrapper outperforms MCP by 100x.</p>
+<p>I held that view for a while too.</p>
+<p>Then writing the previous section made me see what the dismissive view misses. There’s a clear through-line. From prompt to harness, every supposedly markdown-packaged concept is closing a specific gap in the workflow. Every step pushes the LLM further out from being a code-writing assistant into being a worker.</p>
+<p>Let me string the line up.</p>
+<h3 id="Stage-1-Prompt-Engineering-first-half-of-2024"><a href="#Stage-1-Prompt-Engineering-first-half-of-2024" class="headerlink" title="Stage 1: Prompt Engineering (first half of 2024)"></a>Stage 1: Prompt Engineering (first half of 2024)</h3><p>The battleground was writing prompts. Chain-of-thought, few-shot, role-play, output-format constraints. Everyone believed <em>prompt is the interface</em>: write it well and the model performs. WeChat newsletters had a “100 prompt patterns” listicle every other week.</p>
+<p><strong>Capability added</strong>: the LLM understands what you want.</p>
+<p><strong>Limit</strong>: a great prompt can still only show the model what’s in this turn’s input. Long context gets truncated, drowned in noise. Every new conversation starts blank. The model doesn’t know your codebase, your stack, or where you were debugging yesterday.</p>
+<h3 id="Stage-2-Context-Engineering-second-half-of-2024"><a href="#Stage-2-Context-Engineering-second-half-of-2024" class="headerlink" title="Stage 2: Context Engineering (second half of 2024)"></a>Stage 2: Context Engineering (second half of 2024)</h3><p>Within a quarter, people realized “write a good prompt” was the wrong question. The hard part is <em>putting the right information in front of the AI at the right time</em>.</p>
+<p>The patterns spread fast. <code>AGENTS.md</code> / <code>CLAUDE.md</code> so the AI starts a session knowing project layout, coding conventions, and how to run tests. RAG so it can pull from a knowledge base on demand. Compression and summarization, so a 100k-token meeting transcript becomes a 5k-token brief. Cross-session memory, so preferences and lessons learned persist.</p>
+<p><strong>Capability added</strong>: the right context lands in front of the model without depending on a single perfect prompt.</p>
+<p><strong>Limit</strong>: the AI is still a passive receiver. It answers your questions. It doesn’t <em>do</em> anything.</p>
+<h3 id="Stage-3-MCP-November-2024-hands-and-feet"><a href="#Stage-3-MCP-November-2024-hands-and-feet" class="headerlink" title="Stage 3: MCP (November 2024, hands and feet)"></a>Stage 3: MCP (November 2024, hands and feet)</h3><p>In November 2024 Anthropic released the Model Context Protocol. Before MCP, every team giving an LLM external tools wrote its own version of ReAct. Cursor had one. Claude had one. LangChain had a third.</p>
+<p>MCP unified the calling convention into an open protocol. Write a server once, every MCP-aware client can call it.</p>
+<p>From this step on, the LLM does things. Book a flight. Query the web. Run a SQL query. Read a database. Edit a file.</p>
+<p><strong>Capability added</strong>: the LLM produces external side effects.</p>
+<h3 id="Stage-4-Skills-H2-2025-codified-methodology"><a href="#Stage-4-Skills-H2-2025-codified-methodology" class="headerlink" title="Stage 4: Skills (H2 2025, codified methodology)"></a>Stage 4: Skills (H2 2025, codified methodology)</h3><p>Anthropic shipped Agent Skills in October 2025. My first reaction was the predictable one: this is just markdown plus YAML, I already have a <code>~/prompts/</code> folder.</p>
+<p>Two months in I changed my mind.</p>
+<p>What Skills actually solves is <em>reuse</em>. Writing down a method is easy. Writing it down such that everyone in the org can keep calling it is the hard part. A Skill encodes “a specific task done a specific way.” <em>Write a plugin against our internal framework</em> is a Skill. <em>Submit an ML training job to the GPU cluster</em> is a Skill. Once it’s written down, every person and every agent calls it. Nobody re-derives.</p>
+<p>The difference from prompts is what they live in: prompts live one session, skills live the organization.</p>
+<p><strong>Capability added</strong>: the LLM does a specific thing correctly. Not improvising each time. Following the codified method.</p>
+<h3 id="Stage-5-Plugin-Hooks-Subagent-Teams-late-2025-to-early-2026-staying-on-rails"><a href="#Stage-5-Plugin-Hooks-Subagent-Teams-late-2025-to-early-2026-staying-on-rails" class="headerlink" title="Stage 5: Plugin / Hooks / Subagent / Teams (late 2025 to early 2026, staying on rails)"></a>Stage 5: Plugin / Hooks / Subagent / Teams (late 2025 to early 2026, staying on rails)</h3><p>This batch piles up a lot of concepts, but they all answer the same question: how do you keep an LLM on rails through a long session?</p>
+<p>Past about 20 minutes, a Claude Code session starts to drift. Constraints set early get forgotten. Output slowly diverges from the spec. This is a real engineering problem; you cannot wave it away with more markdown.</p>
+<p>Plugins bundle skills, agents, hooks, and commands. Hooks intercept the agent at exit and re-inject the goal. Subagents and Teams let multiple agents collaborate in isolated contexts.</p>
+<p>The cleanest data point that this direction is right is Cognition’s reversal. In June 2025 they published <em>Don’t Build Multi-Agents</em>, dunking hard on multi-agent architecture. Ten months later, in April 2026, they shipped <em>Multi-agents Working</em>, conceding that <em>narrow</em> multi-agent does work: “let agents contribute intelligence, but keep writes single-threaded.” A team that famous publicly reversing a take in under a year is a strong signal that the underlying problem is real.</p>
+<p><strong>Capability added</strong>: the LLM stays stable. Demo time goes from 20 minutes to 20 hours.</p>
+<h3 id="Stage-6-Harness-early-2026-the-engineering-ring-becomes-a-named-thing"><a href="#Stage-6-Harness-early-2026-the-engineering-ring-becomes-a-named-thing" class="headerlink" title="Stage 6: Harness (early 2026, the engineering ring becomes a named thing)"></a>Stage 6: Harness (early 2026, the engineering ring becomes a named thing)</h3><p>In early 2026 a new consensus crystallized. LangChain’s March post <em>The Anatomy of an Agent Harness</em> gave it a name: <strong>Agent = Model + Harness.</strong></p>
+<p>What’s a harness? Everything outside the model. Tools, context management, memory, control flow, error recovery, state persistence.</p>
+<p>The implication is sharp: <em>the model is roughly good enough. What’s missing is the engineering wrapped around it.</em></p>
+<p>There’s been a flood of specific harness work in the last few months. Geoffrey Huntley named the <strong>Ralph Loop</strong>, after the dim Simpsons character Ralph Wiggum. One line of bash:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> :; <span class="keyword">do</span> <span class="built_in">cat</span> PROMPT.md | claude-code ; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>Each iteration restarts the context and re-injects the goal. Huntley’s framing has stuck with me: <em>“deterministic stupidity is a more reliable answer than non-deterministic cleverness.”</em> An agent runs for half a day without drifting, not because it’s smart. Because the harness pins it down.</p>
+<p>In the same family: Hooks (catch the agent at exit, re-inject the goal). Multi-agent teams (isolated contexts, contracts between agents, separate the generator from the evaluator).</p>
+<p>These are all variations on one move. Take <em>model + tools + context + memory + control flow</em>, treat it as a single engineered system, and ship that. <strong>When one model can’t get there alone, let the engineering catch it.</strong></p>
+<hr>
+<p>Stack those six stages up. None of this is markdown reskinning. Each step closes a real workflow gap and pushes AI further out into the rest of the job.</p>
+<p><img src="/img/post_img/agent-evolution-matryoshka.jpg"></p>
+<p>The catch: we made it to the harness era. We did not make it to the end.</p>
+<h2 id="The-enterprise-execution-last-mile-is-still-not-covered"><a href="#The-enterprise-execution-last-mile-is-still-not-covered" class="headerlink" title="The enterprise-execution last mile is still not covered"></a>The enterprise-execution last mile is still not covered</h2><p>A harness that runs eight hours is a demo. Demos do not cover enterprise execution at a real company. ML training platforms. Internal deploy tools. Databases. Stage environments. Telemetry. Wikis scattered across seven different tools.<br>Three specific gaps.</p>
+<p><strong>First, coverage.</strong> There’s a number I’ve been quoting since I saw it earlier this year, originally from a Chinese-language industry post in <em>闲谈数字化</em>: <strong>93% of enterprise AI agent projects stall between POC and production.</strong> Ninety-three percent.</p>
+<p>That sounds like hyperbole until you’ve worked at a big company. Internal infra is roughly a thousand chains. Build, deploy, monitoring, alerting, training, serving, data warehouse, experimentation, on-call, incident response. Each is its own stack. An agent that wants to drive a workflow end-to-end breaks the moment any single link is not AI-aware. <strong>1% of tools missing means 100% of the workflow fails.</strong></p>
+<p><img src="/img/post_img/enterprise-execution-gap.jpg"></p>
+<p>That points to a counter-intuitive conclusion most coverage misses: <strong>large enterprises are slower at agent adoption than startups.</strong> The conventional story (big company has resources, agents land faster) has the sign wrong. Sundar Pichai said internally that Google generates 30% of its code with AI. But Google built all thousand of those internal chains itself, so Google can afford to AI-ify each of them on schedule. A normal Fortune 500 has neither the muscle nor the budget to do the same to its 1990s-era inventory of internal CLIs. The agent walks two steps into the workflow and stops.</p>
+<p><strong>Second, fragmentation.</strong> MCP solved the calling convention. It did not solve what happens when the tool list explodes and the LLM gets lost in the catalog. Cloudflare’s September <em>Code Mode</em> post had the sharpest version of this:</p>
+<blockquote>
+<p>“LLMs are better at writing code to call MCP, than at calling MCP directly.”</p>
+</blockquote>
+<p>That’s a swing at MCP’s surface area, and also a real observation. Handed a pile of MCP servers, the model can’t navigate them. One server’s description can eat tens of thousands of tokens. Mount ten and the context window is gone before the task starts.</p>
+<p>At a large company, going pure MCP means writing a server per platform. Data platform, ML training platform, internal search, monitoring, IAM, message queue. Mount them all and the agent has roughly no room left for the actual job.</p>
+<p><strong>Third, persistence.</strong> This is the most invisible of the three. A single agent has no memory across sessions. Every fresh Claude Code session starts at zero. A team’s tribal knowledge (which internal CLI flag does the thing, which table is canonical, which package mirror needs which proxy) has to be relearned every single time.</p>
+<p>Harrison Chase’s April post <em>Your harness, your memory</em> put it cleanly:</p>
+<blockquote>
+<p>“Without memory, your agents are easily replicable by anyone who has access to the same tools.”</p>
+</blockquote>
+<p>No memory, no compounding. The traps I tripped on during onboarding a year ago, the agent will trip on today.</p>
+<p>Coverage, fragmentation, persistence. Those three breaks are what the enterprise-execution <em>last mile</em> actually looks like up close.</p>
+<h2 id="So-why-are-you-still-busy"><a href="#So-why-are-you-still-busy" class="headerlink" title="So why are you still busy"></a>So why are you still busy</h2><p>Stack the previous four sections up and you get a single answer.</p>
+<p>AI accelerates writing code, which is the thinnest slice of the workday. The 70% that keeps you at the screent sits in enterprise execution: fighting seven internal tools, waiting on training metrics, chasing a flaky e2e test in stage. Two years of evolution have pushed AI into the harness era. But the enterprise-execution last mile is still mostly closed off.</p>
+<p>This is an organizational problem. The model is enough. Most companies’ internal infrastructure is not ready to receive the model.</p>
+<p>What’s changed about your week is the <em>shape</em>. AI made one segment of the workflow 5x faster. The rest stayed manual. Before, slow but even. Now, the asymmetry is what hurts. You feel fast in the part you measure and slow in the part you don’t.</p>
+<p>Next time someone tells you “AI just makes code a little faster, what’s the big deal,” you can tell them they’re measuring wrong. The first question is how far the workflow runs end to end. Then ask where the AI is.</p>
+<p><strong>Your won’t get your hours back from the next model. You’ll get them back from the next generation of workflow engineering.</strong></p>
+<hr>
+<p>So how do you build that workflow engineering? How do you keep a single agent on rails for 20 hours? How do you get multiple agents to collaborate without burning each other’s tokens? How do you make cross-session memory more than a RAG toy? How do you make a large company’s internal infra agent-ready in the first place? Those are the problems I’ve been trying to solve. The experiment is called <strong>Superteam</strong>: a stack stitching together PM-style brainstorm, shell hard-gates, multi-agent pairing, tmux long-running sessions, and a local wiki. Next post will share my experience of replacing myself.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Engineering/" rel="tag"># Engineering</a>
+              <a href="/tags/Productivity/" rel="tag"># Productivity</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/02/27/life2021Spring/" rel="prev" title="Into My Own">
+      <i class="fa fa-chevron-left"></i> Into My Own
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Writing-code-is-the-easiest-part-of-the-workflow"><span class="nav-number">1.</span> <span class="nav-text">Writing code is the easiest part of the workflow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-whole-industry-has-been-pushing-LLMs-through-the-rest-of-the-workflow"><span class="nav-number">2.</span> <span class="nav-text">The whole industry has been pushing LLMs through the rest of the workflow</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Stage-1-Prompt-Engineering-first-half-of-2024"><span class="nav-number">2.1.</span> <span class="nav-text">Stage 1: Prompt Engineering (first half of 2024)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stage-2-Context-Engineering-second-half-of-2024"><span class="nav-number">2.2.</span> <span class="nav-text">Stage 2: Context Engineering (second half of 2024)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stage-3-MCP-November-2024-hands-and-feet"><span class="nav-number">2.3.</span> <span class="nav-text">Stage 3: MCP (November 2024, hands and feet)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stage-4-Skills-H2-2025-codified-methodology"><span class="nav-number">2.4.</span> <span class="nav-text">Stage 4: Skills (H2 2025, codified methodology)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stage-5-Plugin-Hooks-Subagent-Teams-late-2025-to-early-2026-staying-on-rails"><span class="nav-number">2.5.</span> <span class="nav-text">Stage 5: Plugin &#x2F; Hooks &#x2F; Subagent &#x2F; Teams (late 2025 to early 2026, staying on rails)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stage-6-Harness-early-2026-the-engineering-ring-becomes-a-named-thing"><span class="nav-number">2.6.</span> <span class="nav-text">Stage 6: Harness (early 2026, the engineering ring becomes a named thing)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-enterprise-execution-last-mile-is-still-not-covered"><span class="nav-number">3.</span> <span class="nav-text">The enterprise-execution last mile is still not covered</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#So-why-are-you-still-busy"><span class="nav-number">4.</span> <span class="nav-text">So why are you still busy</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
