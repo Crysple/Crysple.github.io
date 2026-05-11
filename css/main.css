@@ -1172,7 +1172,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #78cfe7;
+  background: #5e53cb;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2293,4 +2293,51 @@ embed {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400;1,8..60,600&display=swap");
+.main-inner {
+  max-width: 728px !important;
+  width: 90% !important;
+}
+.post-body {
+  font-family: 'Source Serif 4', Georgia, Cambria, 'Times New Roman', Times, serif;
+  font-size: 20px;
+  line-height: 1.75;
+  color: #292929;
+  letter-spacing: -0.003em;
+}
+.post-body h1,
+.post-body h2,
+.post-body h3,
+.post-body h4,
+.post-body h5,
+.post-body h6 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.016em;
+  color: #1a1a1a;
+}
+.post-body h2 {
+  font-size: 1.6em;
+  margin-top: 2em;
+}
+.post-body h3 {
+  font-size: 1.25em;
+  margin-top: 1.8em;
+}
+.post-body blockquote {
+  border-left: 3px solid #292929;
+  padding-left: 20px;
+  font-style: italic;
+  color: #555;
+}
+.post-body code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.85em;
+  background: #f2f2f2;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+.post-body p {
+  margin-bottom: 1.5em;
 }
